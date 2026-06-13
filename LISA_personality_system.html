@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LISA — Your AI Co-Pilot</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#080808;color:#e2e2e2;min-height:100vh}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#222;border-radius:2px}
+.card{background:#101010;border:1px solid #1c1c1c;border-radius:12px}
+.opt{background:#101010;border:1px solid #1c1c1c;border-radius:10px;padding:16px 18px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
+.opt:hover{border-color:#2e2e2e;background:#141414}
+.opt.sel{border-color:#e2e2e2;background:#141414}
+.dot{width:15px;height:15px;min-width:15px;border-radius:50%;border:1.5px solid #2a2a2a;transition:all .15s;margin-top:3px}
+.dot.sel{background:#e2e2e2;border-color:#e2e2e2}
+.btn-p{background:#e2e2e2;color:#080808;font-weight:600;font-size:13px;padding:11px 28px;border-radius:8px;border:none;cursor:pointer;transition:background .15s,transform .1s;letter-spacing:.02em}
+.btn-p:hover:not(:disabled){background:#fff;transform:translateY(-1px)}
+.btn-p:disabled{opacity:.2;cursor:not-allowed;transform:none}
+.btn-s{background:transparent;color:#444;font-size:13px;font-weight:500;padding:11px 18px;border-radius:8px;border:1px solid #1c1c1c;cursor:pointer;transition:color .15s,border-color .15s}
+.btn-s:hover{color:#777;border-color:#2a2a2a}
+.btn-g{background:#101010;border:1px solid #1c1c1c;border-radius:8px;padding:14px 18px;cursor:pointer;color:#666;font-size:13px;font-weight:500;transition:border-color .15s,color .15s;text-align:left}
+.btn-g:hover{border-color:#2e2e2e;color:#999}
+.pg-track{background:#181818;border-radius:99px;height:3px}
+.pg-fill{background:#e2e2e2;border-radius:99px;height:3px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.lbl{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#383838}
+.fade-in{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+input[type=text],input[type=date],input[type=time],select,textarea{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:8px;color:#e2e2e2;font-family:'Inter',sans-serif;font-size:14px;padding:12px 14px;outline:none;transition:border-color .15s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:#3a3a3a}
+select option{background:#111;color:#e2e2e2}
+textarea{resize:vertical;line-height:1.6}
+.badge-y{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600}
+.badge-g{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600}
+.badge-b{background:rgba(99,179,237,.1);color:#63b3ed;border:1px solid rgba(99,179,237,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600}
+.badge-p{background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600}
+.type-box{background:#101010;border:1px solid #1c1c1c;border-radius:12px;padding:22px;text-align:center}
+.type-num{font-size:42px;font-weight:700;letter-spacing:-.04em;line-height:1}
+.snapshot{background:#0d0d0d;border:1px solid #181818;border-radius:8px;padding:14px 16px}
+.pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:#63b3ed;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.z-pill{background:#101010;border:1px solid #1c1c1c;border-radius:8px;padding:10px 14px;font-size:13px;color:#888;display:flex;flex-direction:column;gap:3px}
+.z-pill strong{font-size:15px;font-weight:600;color:#e2e2e2}
+.src-tag{display:inline-flex;align-items:center;gap:5px;background:#101010;border:1px solid #1c1c1c;border-radius:5px;padding:4px 9px;font-size:11px;color:#555}
+.nav-tab{padding:9px 16px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;color:#444;transition:all .15s}
+.nav-tab.active{background:#141414;color:#e2e2e2;border:1px solid #1e1e1e}
+.nav-tab:not(.active):hover{color:#777}
+.json-blk{background:#0a0a0a;border:1px solid #181818;border-radius:8px;padding:16px;font-family:'Courier New',monospace;font-size:11.5px;color:#666;line-height:1.8;max-height:280px;overflow-y:auto;white-space:pre-wrap}
+.toast{position:fixed;bottom:28px;right:28px;background:#141414;border:1px solid #222;border-radius:8px;padding:12px 18px;font-size:13px;z-index:200;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* Likert scale */
+.likert-row{background:#0d0d0d;border:1px solid #181818;border-radius:10px;padding:16px;margin-bottom:8px}
+.likert-btn{width:36px;height:36px;border-radius:8px;border:1px solid #222;background:#101010;cursor:pointer;font-size:13px;font-weight:600;color:#444;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.likert-btn:hover{border-color:#333;color:#888;background:#161616}
+.likert-btn.sel-1{border-color:#f87171;background:rgba(248,113,113,.1);color:#f87171}
+.likert-btn.sel-2{border-color:#fb923c;background:rgba(251,146,60,.1);color:#fb923c}
+.likert-btn.sel-3{border-color:#555;background:#1a1a1a;color:#888}
+.likert-btn.sel-4{border-color:#60a5fa;background:rgba(96,165,250,.1);color:#60a5fa}
+.likert-btn.sel-5{border-color:#34d399;background:rgba(52,211,153,.1);color:#34d399}
+
+/* MBTI two-option layout */
+.mbti-opt{flex:1;background:#101010;border:1px solid #1c1c1c;border-radius:12px;padding:20px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;text-align:center;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.mbti-opt:hover{border-color:#2e2e2e;background:#141414}
+.mbti-opt.sel{border-color:#e2e2e2;background:#141414}
+.mbti-letter{font-size:28px;font-weight:700;letter-spacing:-.03em;color:#383838;transition:color .15s}
+.mbti-opt.sel .mbti-letter{color:#e2e2e2}
+</style>
+</head>
+<body>
+
+<!-- ══ INTRO SCREEN ══ -->
+<div class="screen active flex-col justify-between" id="s-intro" style="min-height:100vh;background:#080808;overflow:hidden;position:relative;">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(167,139,250,0.06) 0%, transparent 70%);pointer-events:none"></div>
+  <div class="flex items-center justify-between px-8 py-6" style="position:relative;z-index:1">
+    <div class="flex items-center gap-3">
+      <div style="width:32px;height:32px;background:#e2e2e2;border-radius:9px;display:flex;align-items:center;justify-content:center"><span style="font-size:14px;font-weight:700;color:#080808">L</span></div>
+      <span style="font-size:14px;font-weight:600;color:#e2e2e2">LISA</span>
+    </div>
+    <div style="font-size:11px;color:#252525;font-weight:500;letter-spacing:.08em;text-transform:uppercase">Powered by Claude · Anthropic</div>
+  </div>
+  <div class="flex flex-col items-center justify-center flex-1 px-8 text-center" style="position:relative;z-index:1;padding-bottom:40px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#383838;margin-bottom:20px">For Lisa · Real Estate Professional</div>
+    <h1 style="font-size:clamp(32px,6vw,58px);font-weight:700;letter-spacing:-.04em;line-height:1.08;color:#e2e2e2;max-width:720px;margin-bottom:24px">
+      You didn't build your career<br/>
+      <span style="color:#a78bfa">waiting for the right moment.</span><br/>
+      This is it.
+    </h1>
+    <p style="font-size:clamp(15px,2vw,18px);color:#4a4a4a;line-height:1.7;max-width:540px;margin-bottom:40px">
+      LISA is your AI co-pilot. She handles the writing, the drafts, the follow-ups. You handle the people — the part no technology will ever replace.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;max-width:700px;width:100%;margin-bottom:44px">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid #1a1a1a;border-radius:12px;padding:22px;text-align:left">
+        <div style="font-size:22px;margin-bottom:10px">🧠</div>
+        <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:6px">Your experience is irreplaceable</div>
+        <div style="font-size:12px;color:#3e3e3e;line-height:1.65">Younger agents are still learning the market. You've <em style="color:#555">been</em> the market for decades. LISA amplifies that — she doesn't replace it.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid #1a1a1a;border-radius:12px;padding:22px;text-align:left">
+        <div style="font-size:22px;margin-bottom:10px">⚡</div>
+        <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:6px">Speed without sacrificing trust</div>
+        <div style="font-size:12px;color:#3e3e3e;line-height:1.65">The one thing holding back great agents is time. LISA gives it back — so you can respond faster, in your own voice.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid #1a1a1a;border-radius:12px;padding:22px;text-align:left">
+        <div style="font-size:22px;margin-bottom:10px">🏆</div>
+        <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:6px">The boomer advantage</div>
+        <div style="font-size:12px;color:#3e3e3e;line-height:1.65">You know how to build a real relationship. AI can't teach that. But AI can handle everything that used to eat the time you'd rather spend doing exactly that.</div>
+      </div>
+    </div>
+    <div style="background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);border-radius:12px;padding:20px 28px;max-width:560px;width:100%;margin-bottom:44px;text-align:left">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#6d4e9e;margin-bottom:10px">Where LISA is taking you</div>
+      <p style="font-size:13px;color:#888;line-height:1.75">LISA learns who you are — how you write, how you think, what you sound like. Then she drafts every email, text, and listing in <strong style="color:#ccc">your exact voice.</strong> Everything she produces lands in a review queue. <strong style="color:#ccc">You always have the final say.</strong> No auto-sends. No surprises. Just a version of you that never gets tired.</p>
+    </div>
+    <div class="flex flex-col items-center gap-3" style="width:100%;max-width:360px">
+      <button class="btn-p" style="width:100%;padding:14px;font-size:15px" onclick="goIntroNext()">Let's build LISA →</button>
+      <div id="intro-monitor-btn" style="display:none;width:100%">
+        <button class="btn-s" style="width:100%" onclick="go('s6')">Open My Dashboard</button>
+      </div>
+      <div style="font-size:11px;color:#252525;margin-top:4px">Everything is built in — no accounts, no sign-ups, no leaving this app</div>
+    </div>
+  </div>
+  <div class="flex items-center justify-center gap-6 px-8 py-5" style="border-top:1px solid #111;position:relative;z-index:1;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="font-size:11px;color:#2e2e2e">LISA never auto-sends anything</span></div>
+    <div style="display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="font-size:11px;color:#2e2e2e">Your data stays on your device</span></div>
+    <div style="display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span style="font-size:11px;color:#2e2e2e">Powered by Claude · Anthropic AI</span></div>
+  </div>
+</div>
+
+
+<!-- ══ WELCOME ══ -->
+<div class="screen flex-col items-center justify-center px-6 py-12" id="s0">
+<div class="w-full max-w-lg fade-in">
+  <div class="flex items-center gap-3 mb-10">
+    <div style="width:34px;height:34px;background:#e2e2e2;border-radius:9px;display:flex;align-items:center;justify-content:center"><span style="font-size:15px;font-weight:700;color:#080808">L</span></div>
+    <span style="font-size:15px;font-weight:600">LISA · Personality System</span>
+  </div>
+  <div class="lbl mb-3">What We're Building</div>
+  <h1 style="font-size:28px;font-weight:700;letter-spacing:-.03em;line-height:1.2;margin-bottom:14px">Four steps.<br/>One complete picture.</h1>
+  <p style="font-size:14px;color:#4a4a4a;line-height:1.7;margin-bottom:32px">Everything is built right here — no websites to visit, no accounts to create, no sign-up screens. Just you and the questions.</p>
+  <div class="card p-5 mb-8 flex flex-col gap-3">
+    <div class="flex items-center gap-3">
+      <div style="width:26px;height:26px;background:#141414;border-radius:7px;border:1px solid #1c1c1c;display:flex;align-items:center;justify-content:center;font-size:12px;color:#a78bfa;font-weight:700">1</div>
+      <div><div style="font-size:13px;font-weight:500;color:#ccc">Astrology intake</div><div style="font-size:11px;color:#383838">Birth date, time &amp; city → Sun, Moon, Rising signs</div></div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div style="width:26px;height:26px;background:#141414;border-radius:7px;border:1px solid #1c1c1c;display:flex;align-items:center;justify-content:center;font-size:12px;color:#63b3ed;font-weight:700">2</div>
+      <div><div style="font-size:13px;font-weight:500;color:#ccc">Personality Style — MBTI</div><div style="font-size:11px;color:#383838">20 questions · built right here · no sign-up</div></div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div style="width:26px;height:26px;background:#141414;border-radius:7px;border:1px solid #1c1c1c;display:flex;align-items:center;justify-content:center;font-size:12px;color:#34d399;font-weight:700">3</div>
+      <div><div style="font-size:13px;font-weight:500;color:#ccc">Core Motivation — Enneagram</div><div style="font-size:11px;color:#383838">36 statements · rate yourself · no sign-up</div></div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div style="width:26px;height:26px;background:#141414;border-radius:7px;border:1px solid #1c1c1c;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fbbf24;font-weight:700">4</div>
+      <div><div style="font-size:13px;font-weight:500;color:#ccc">Your Voice Notes</div><div style="font-size:11px;color:#383838">Tell LISA things only you know — in your own words</div></div>
+    </div>
+  </div>
+  <button class="btn-p w-full" onclick="go('s1')">Start →</button>
+  <div id="w-monitor-btn" style="display:none;margin-top:12px">
+    <button class="btn-s w-full" onclick="go('s6')">View My Monitor Dashboard</button>
+  </div>
+</div>
+</div>
+
+
+<!-- ══ ASTROLOGY INTAKE ══ -->
+<div class="screen flex-col items-center justify-start px-6 py-10" id="s1">
+<div class="w-full max-w-lg fade-in">
+  <div class="lbl mb-2">Step 1 of 4 · Astrology</div>
+  <h2 style="font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px">Birth Data</h2>
+  <p style="font-size:13px;color:#444;margin-bottom:28px;line-height:1.6">Your Sun, Moon, and Rising signs shape how you naturally communicate. The more detail you give, the more accurate your chart.</p>
+  <div class="flex flex-col gap-4 mb-6">
+    <div><div class="lbl mb-2">Birth Date</div><input type="date" id="b-date" oninput="checkAstroForm()"/></div>
+    <div><div class="lbl mb-2">Birth Time <span style="color:#333;font-weight:400;letter-spacing:0;text-transform:none;font-size:11px">(needed for Rising sign — as exact as you know)</span></div><input type="time" id="b-time" oninput="checkAstroForm()"/></div>
+    <div><div class="lbl mb-2">Birth City</div><input type="text" id="b-city" oninput="checkAstroForm()" placeholder="e.g. Houston, TX"/></div>
+  </div>
+  <div class="flex items-center gap-3">
+    <button class="btn-s" onclick="go('s0')">← Back</button>
+    <button class="btn-p flex-1" id="btn-astro-next" onclick="processAstro()" disabled>Calculate My Signs →</button>
+  </div>
+</div>
+</div>
+
+
+<!-- ══ ASTROLOGY RESULTS ══ -->
+<div class="screen flex-col items-center justify-start px-6 py-10" id="s1b">
+<div class="w-full max-w-lg fade-in">
+  <div class="lbl mb-2">Birth Chart</div>
+  <h2 style="font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:20px">Your Astrological Profile</h2>
+  <div class="grid grid-cols-3 gap-3 mb-6" id="astro-signs"></div>
+  <div class="card p-5 mb-6" id="rising-card">
+    <div class="lbl mb-3">Rising / Ascendant Sign</div>
+    <div id="rising-status"><!-- filled by processAstro --></div>
+    <div id="rising-override" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid #181818">
+      <div class="lbl mb-2">Override Rising Sign</div>
+      <select id="rising-select" onchange="checkRising()">
+        <option value="">— select —</option>
+        <option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option>
+        <option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option>
+        <option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option>
+      </select>
+    </div>
+  </div>
+  <div id="astro-summary" class="card p-5 mb-6" style="display:none">
+    <div class="lbl mb-3">What this means for LISA</div>
+    <div id="astro-summary-text" style="font-size:13px;color:#777;line-height:1.75"></div>
+  </div>
+  <div class="flex items-center gap-3">
+    <button class="btn-s" onclick="go('s1')">← Back</button>
+    <button class="btn-p flex-1" id="btn-astro-continue" onclick="go('s2')">Next: Personality Test →</button>
+  </div>
+</div>
+</div>
+
+
+<!-- ══ MBTI TEST (s2) ══ -->
+<div class="screen flex-col min-h-screen" id="s2">
+  <div class="flex items-center justify-between px-8 py-4 border-b border-[#141414]">
+    <div class="flex items-center gap-3">
+      <div style="width:28px;height:28px;background:#e2e2e2;border-radius:7px;display:flex;align-items:center;justify-content:center"><span style="font-size:12px;font-weight:700;color:#080808">L</span></div>
+      <div>
+        <div style="font-size:13px;font-weight:600">Step 2 of 4 · Personality Style</div>
+        <div style="font-size:11px;color:#383838">No sign-up · No external websites · Just you and the questions</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#383838" id="mbti-counter">1 of 20</div>
+  </div>
+  <div class="px-8 py-3">
+    <div class="flex items-center justify-between mb-1">
+      <div class="lbl" id="mbti-dim-label">Energy Style</div>
+      <div style="font-size:11px;color:#2a2a2a" id="mbti-pct">0%</div>
+    </div>
+    <div class="pg-track"><div class="pg-fill" id="mbti-pfill" style="width:0%"></div></div>
+  </div>
+  <div class="flex-1 flex items-start justify-center px-6 py-6 overflow-y-auto">
+    <div class="w-full max-w-xl" id="mbti-area"></div>
+  </div>
+  <div class="flex items-center justify-between px-8 py-5 border-t border-[#141414]">
+    <button class="btn-s" id="mbti-back" onclick="mbtiPrev()">← Back</button>
+    <button class="btn-p" id="mbti-next" onclick="mbtiNext()" disabled>Continue</button>
+  </div>
+</div>
+
+
+<!-- ══ ENNEAGRAM TEST (s3) ══ -->
+<div class="screen flex-col min-h-screen" id="s3">
+  <div class="flex items-center justify-between px-8 py-4 border-b border-[#141414]">
+    <div class="flex items-center gap-3">
+      <div style="width:28px;height:28px;background:#e2e2e2;border-radius:7px;display:flex;align-items:center;justify-content:center"><span style="font-size:12px;font-weight:700;color:#080808">L</span></div>
+      <div>
+        <div style="font-size:13px;font-weight:600">Step 3 of 4 · Core Motivation</div>
+        <div style="font-size:11px;color:#383838">Rate each statement — no right or wrong answers</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#383838" id="enn-group-label">Group 1 of 9</div>
+  </div>
+  <div class="px-8 py-3">
+    <div class="flex items-center justify-between mb-1">
+      <div class="lbl" id="enn-type-label">Type 1</div>
+      <div style="font-size:11px;color:#2a2a2a" id="enn-pct">0%</div>
+    </div>
+    <div class="pg-track"><div class="pg-fill" id="enn-pfill" style="width:0%"></div></div>
+  </div>
+  <div class="flex-1 overflow-y-auto px-6 py-4">
+    <div class="w-full max-w-xl mx-auto" id="enn-area"></div>
+  </div>
+  <div class="flex items-center justify-between px-8 py-5 border-t border-[#141414]">
+    <button class="btn-s" id="enn-back" onclick="ennPrev()">← Back</button>
+    <button class="btn-p" id="enn-next" onclick="ennNext()" disabled>Continue</button>
+  </div>
+</div>
+
+
+<!-- ══ VOICE NOTES (s2b) ══ -->
+<div class="screen flex-col items-center justify-start px-6 py-10" id="s2b">
+<div class="w-full max-w-lg fade-in">
+  <div class="lbl mb-2">Step 4 of 4 · Voice Notes</div>
+  <h2 style="font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px">Your Voice, In Your Words</h2>
+  <p style="font-size:13px;color:#444;margin-bottom:8px;line-height:1.6">No quiz can capture everything. These questions let you tell LISA things only you know — the instincts you've built over 30+ years.</p>
+  <p style="font-size:12px;color:#2e2e2e;margin-bottom:24px">Answer as many or as few as you want. Write like you're talking to a colleague.</p>
+  <div class="flex flex-col gap-5 mb-6">
+    <div class="card p-5">
+      <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:4px">When a client makes a lowball offer, how do you handle it?</div>
+      <div style="font-size:11px;color:#333;margin-bottom:10px">LISA will use this to draft negotiation responses in your style</div>
+      <textarea id="vn-lowball" rows="3" placeholder="e.g. I don't panic. I call them, keep it calm, and remind them what comparable properties sold for..."></textarea>
+    </div>
+    <div class="card p-5">
+      <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:4px">How do you open a conversation with a brand new buyer?</div>
+      <div style="font-size:11px;color:#333;margin-bottom:10px">First impressions set the tone — LISA will match yours</div>
+      <textarea id="vn-opener" rows="3" placeholder="e.g. I always start by asking what their timeline is. Not what they're looking for — the timeline tells me everything..."></textarea>
+    </div>
+    <div class="card p-5">
+      <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:4px">What phrases or words do you find unprofessional or would never use?</div>
+      <div style="font-size:11px;color:#333;margin-bottom:10px">LISA adds these to her permanent banned list</div>
+      <textarea id="vn-banned" rows="3" placeholder="e.g. I hate 'per my last email' — sounds passive aggressive. I never say 'ASAP' to clients..."></textarea>
+    </div>
+    <div class="card p-5">
+      <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:4px">How do you close a message when the news is bad?</div>
+      <div style="font-size:11px;color:#333;margin-bottom:10px">Offer rejections, price drops — what's your approach?</div>
+      <textarea id="vn-bad-news" rows="3" placeholder="e.g. I always end with what we're doing next. I never leave a client sitting with just bad news..."></textarea>
+    </div>
+    <div class="card p-5">
+      <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:4px">Anything else LISA should know about how you communicate?</div>
+      <div style="font-size:11px;color:#333;margin-bottom:10px">Pet peeves, signature habits, things clients always say about you</div>
+      <textarea id="vn-other" rows="4" placeholder="e.g. My clients always tell me I make them feel like the only client I have..."></textarea>
+    </div>
+  </div>
+  <div class="card p-4 mb-6" style="background:#0a0a0a">
+    <div class="lbl mb-2">What LISA Does With This</div>
+    <div style="font-size:12px;color:#333;line-height:1.65">Every word you write here gets embedded directly into LISA's voice engine. She will not paraphrase — she will write the way you wrote it. Your real estate instincts, captured in writing, become the rules she drafts by.</div>
+  </div>
+  <div class="flex items-center gap-3">
+    <button class="btn-s" onclick="go('s3')">← Back</button>
+    <button class="btn-p flex-1" onclick="saveVoiceNotes()">Build My Profile →</button>
+  </div>
+</div>
+</div>
+
+
+<!-- ══ RESULTS (s4) ══ -->
+<div class="screen flex-col items-start justify-start px-6 py-10" id="s4">
+<div class="w-full max-w-2xl mx-auto fade-in">
+  <div class="flex items-center gap-3 mb-8">
+    <div style="width:28px;height:28px;background:#e2e2e2;border-radius:7px;display:flex;align-items:center;justify-content:center"><span style="font-size:12px;font-weight:700;color:#080808">L</span></div>
+    <span style="font-size:14px;font-weight:600;color:#777">Profile Complete</span>
+    <span class="badge-g" style="margin-left:auto">Live</span>
+  </div>
+  <div class="grid grid-cols-2 gap-3 mb-5" id="r-types"></div>
+  <div id="r-zodiac" class="grid grid-cols-3 gap-3 mb-5"></div>
+  <div class="card p-4 mb-5"><div class="lbl mb-3">Data Sources</div><div id="r-sources" class="flex flex-wrap gap-2"></div></div>
+  <div class="card p-5 mb-4"><div class="lbl mb-3">Communication Blueprint</div><div id="r-summary" style="font-size:13px;color:#777;line-height:1.8"></div></div>
+  <div class="card p-5 mb-4"><div class="lbl mb-3">Rules LISA Will Follow</div><div id="r-rules" class="flex flex-col gap-2"></div></div>
+  <div class="card p-5 mb-5"><div class="lbl mb-3">Phrases LISA Will Never Write</div><div id="r-forbidden" class="flex flex-wrap gap-2"></div></div>
+  <div class="card p-5 mb-5">
+    <div class="flex items-center justify-between mb-3"><div class="lbl">Generated Profile</div><span style="font-size:11px;color:#2a2a2a">LISA_personality.json</span></div>
+    <div class="json-blk" id="r-json"></div>
+  </div>
+
+  <!-- Email share -->
+  <div id="email-share-box" class="card p-5 mb-5" style="border-color:rgba(167,139,250,0.25);background:rgba(167,139,250,0.04)">
+    <div class="flex items-center gap-3 mb-3">
+      <div style="width:32px;height:32px;background:rgba(167,139,250,0.1);border-radius:8px;border:1px solid rgba(167,139,250,0.2);display:flex;align-items:center;justify-content:center">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#ccc">Send your results to your setup team</div>
+        <div style="font-size:11px;color:#444;margin-top:2px">Your son set this up for you — tap below to send him your completed profile</div>
+      </div>
+    </div>
+    <button class="btn-p w-full" onclick="emailResults()" style="background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.25)">
+      <svg style="display:inline;margin-right:6px" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Send Profile Results →
+    </button>
+    <div style="font-size:11px;color:#2e2e2e;margin-top:8px;text-align:center">Opens your email with everything pre-filled. You just hit send.</div>
+  </div>
+
+  <div class="flex items-center gap-3 flex-wrap">
+    <button class="btn-p" onclick="downloadJSON()">
+      <svg style="display:inline;margin-right:6px" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download LISA_personality.json
+    </button>
+    <button class="btn-s" onclick="go('s6')">Open Monitor Dashboard →</button>
+  </div>
+  <div style="font-size:11px;color:#222;margin-top:10px">Save to <code style="background:#111;padding:2px 5px;border-radius:3px;color:#333">lisa_training_data/voice_profile/</code></div>
+</div>
+</div>
+
+
+<!-- ══ CHECK-IN (s5) ══ -->
+<div class="screen flex-col items-center justify-start px-6 py-10" id="s5">
+<div class="w-full max-w-lg fade-in">
+  <div class="flex items-center gap-3 mb-8">
+    <div style="width:28px;height:28px;background:#e2e2e2;border-radius:7px;display:flex;align-items:center;justify-content:center"><span style="font-size:12px;font-weight:700;color:#080808">L</span></div>
+    <span style="font-size:14px;font-weight:600">Personality Check-In</span>
+    <span class="badge-y" style="margin-left:auto">5 questions</span>
+  </div>
+  <div class="lbl mb-2">Monthly Calibration</div>
+  <h2 style="font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px">Have you changed?</h2>
+  <p style="font-size:13px;color:#444;margin-bottom:24px;line-height:1.6">Takes 2 minutes. LISA compares your answers to your baseline and flags any drift — so her drafts stay accurate.</p>
+  <div id="ci-area" class="flex flex-col gap-3 mb-6"></div>
+  <div class="flex items-center gap-3">
+    <button class="btn-s" onclick="go('s6')">← Skip</button>
+    <button class="btn-p flex-1" id="ci-next" onclick="submitCheckin()" disabled>Submit Check-In</button>
+  </div>
+</div>
+</div>
+
+
+<!-- ══ MONITOR DASHBOARD (s6) ══ -->
+<div class="screen flex-col min-h-screen" id="s6">
+  <div class="flex items-center justify-between px-8 py-4 border-b border-[#141414]">
+    <div class="flex items-center gap-3">
+      <div style="width:28px;height:28px;background:#e2e2e2;border-radius:7px;display:flex;align-items:center;justify-content:center"><span style="font-size:12px;font-weight:700;color:#080808">L</span></div>
+      <span style="font-size:14px;font-weight:600">LISA · Monitor</span>
+    </div>
+    <div class="flex items-center gap-2"><span class="pulse"></span><span style="font-size:12px;color:#383838">Tracking active</span></div>
+  </div>
+  <div class="flex-1 overflow-y-auto px-8 py-6">
+    <div class="max-w-2xl mx-auto">
+      <div class="flex items-center gap-1 mb-6 p-1" style="background:#0d0d0d;border:1px solid #181818;border-radius:9px;width:fit-content;flex-wrap:wrap">
+        <div class="nav-tab active" id="tab-overview" onclick="switchTab('overview')">Overview</div>
+        <div class="nav-tab" id="tab-history" onclick="switchTab('history')">History</div>
+        <div class="nav-tab" id="tab-drift" onclick="switchTab('drift')">Drift</div>
+        <div class="nav-tab" id="tab-ideas" onclick="switchTab('ideas')" style="position:relative">
+          Ideas
+          <span id="ideas-dot" style="display:none;position:absolute;top:6px;right:6px;width:5px;height:5px;background:#a78bfa;border-radius:50%"></span>
+        </div>
+      </div>
+
+      <!-- OVERVIEW -->
+      <div id="tab-content-overview">
+        <div class="grid grid-cols-3 gap-3 mb-5" id="m-stat-row"></div>
+        <div class="card p-5 mb-4" id="m-current-profile"></div>
+        <div class="card p-5 mb-4" id="m-schedule"></div>
+        <div class="flex gap-3">
+          <button class="btn-p flex-1" onclick="startCheckin()">Run Check-In</button>
+          <button class="btn-s" onclick="go('s0')">Rebuild Full Profile</button>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div id="tab-content-history" style="display:none">
+        <div id="m-history-list" class="flex flex-col gap-3"></div>
+        <div id="m-history-empty" style="display:none;padding:48px 0;text-align:center">
+          <div style="font-size:14px;color:#333">No history yet</div>
+          <div style="font-size:12px;color:#252525;margin-top:6px">Complete your first profile to start tracking</div>
+        </div>
+      </div>
+
+      <!-- DRIFT -->
+      <div id="tab-content-drift" style="display:none">
+        <div id="m-drift-content" class="flex flex-col gap-4"></div>
+      </div>
+
+      <!-- IDEAS -->
+      <div id="tab-content-ideas" style="display:none">
+        <div style="margin-bottom:20px">
+          <div style="font-size:18px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px">Your Notes to the Team</div>
+          <p style="font-size:13px;color:#444;line-height:1.65">Anything you want added, changed, or tried — write it here. Feature ideas, things that felt off, things you loved, questions, anything. Your son reads every message.</p>
+        </div>
+        <div class="card p-5 mb-4">
+          <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:10px;letter-spacing:.04em">NEW NOTE</div>
+          <textarea id="idea-input" rows="6" placeholder="Type anything here...
+
+Examples:
+• Can LISA learn to write my Instagram captions too?
+• I want the app to remind me to follow up with buyers after 3 days
+• I love the dashboard but can the text be a little bigger?
+• What if LISA could draft my listing presentations?
+
+Nothing is too small. This is your app." style="font-size:14px;line-height:1.75"></textarea>
+          <div class="flex items-center gap-3 mt-4">
+            <button class="btn-p flex-1" onclick="sendIdea()" style="background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.25)">
+              <svg style="display:inline;margin-right:6px" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Send to Setup Team
+            </button>
+            <button class="btn-s" onclick="saveIdeaDraft()">Save Draft</button>
+          </div>
+          <div style="font-size:11px;color:#252525;margin-top:8px;text-align:center">Opens your email app pre-filled. You just hit send.</div>
+        </div>
+        <div><div class="lbl mb-3">Sent Notes</div><div id="ideas-log" class="flex flex-col gap-3"></div><div id="ideas-log-empty" style="padding:32px 0;text-align:center"><div style="font-size:13px;color:#252525">Nothing sent yet</div></div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────
+const SETUP_EMAIL = 'riceyoung@icloud.com';
+
+// ── ASTROLOGY ────────────────────────────────
+const SIGNS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const SIGN_EMOJI={'Aries':'♈','Taurus':'♉','Gemini':'♊','Cancer':'♋','Leo':'♌','Virgo':'♍','Libra':'♎','Scorpio':'♏','Sagittarius':'♐','Capricorn':'♑','Aquarius':'♒','Pisces':'♓'};
+const SIGN_ELEM={'Aries':'Fire','Taurus':'Earth','Gemini':'Air','Cancer':'Water','Leo':'Fire','Virgo':'Earth','Libra':'Air','Scorpio':'Water','Sagittarius':'Fire','Capricorn':'Earth','Aquarius':'Air','Pisces':'Water'};
+const ELEM_COLOR={'Fire':'#f87171','Earth':'#86efac','Air':'#93c5fd','Water':'#a5b4fc'};
+function sunSign(d){const m=d.getMonth()+1,day=d.getDate();if((m==3&&day>=21)||(m==4&&day<=19))return'Aries';if((m==4&&day>=20)||(m==5&&day<=20))return'Taurus';if((m==5&&day>=21)||(m==6&&day<=20))return'Gemini';if((m==6&&day>=21)||(m==7&&day<=22))return'Cancer';if((m==7&&day>=23)||(m==8&&day<=22))return'Leo';if((m==8&&day>=23)||(m==9&&day<=22))return'Virgo';if((m==9&&day>=23)||(m==10&&day<=22))return'Libra';if((m==10&&day>=23)||(m==11&&day<=21))return'Scorpio';if((m==11&&day>=22)||(m==12&&day<=21))return'Sagittarius';if((m==12&&day>=22)||(m==1&&day<=19))return'Capricorn';if((m==1&&day>=20)||(m==2&&day<=18))return'Aquarius';return'Pisces';}
+function moonSign(d){const ref=new Date('2000-01-01T12:00:00Z');const days=(d-ref)/86400000;const lon=((218.3165+13.17639646*days)%360+360)%360;return SIGNS[Math.floor(lon/30)];}
+function checkAstroForm(){const d=document.getElementById('b-date').value,c=document.getElementById('b-city').value.trim();document.getElementById('btn-astro-next').disabled=!(d&&c);}
+
+// ── GEOCODE + ASCENDANT ────────────────────────────────
+async function geocodeCity(cityName){
+  try{
+    const url=`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(cityName)}&format=json&limit=1`;
+    const resp=await fetch(url,{headers:{'Accept-Language':'en'}});
+    const data=await resp.json();
+    if(data&&data.length>0)return{lat:parseFloat(data[0].lat),lon:parseFloat(data[0].lon),display:data[0].display_name};
+    return null;
+  }catch(e){return null;}
+}
+
+function signFromDeg(deg){return SIGNS[Math.floor(((deg%360)+360)%360/30)];}
+
+function calcAscendant(dateStr,timeStr,lat,lon){
+  const[yr,mo,dy]=dateStr.split('-').map(Number);
+  const[hr,mn]=(timeStr||'12:00').split(':').map(Number);
+  const utcH=hr+mn/60-lon/15;
+  const a=Math.floor((14-mo)/12),y=yr+4800-a,m=mo+12*a-3;
+  let JD=dy+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045+(utcH-12)/24;
+  const T=(JD-2451545.0)/36525;
+  let GMST=280.46061837+360.98564736629*(JD-2451545)+0.000387933*T*T-T*T*T/38710000;
+  GMST=((GMST%360)+360)%360;
+  const LST=((GMST+lon)%360+360)%360;
+  const RAMC=LST*Math.PI/180;
+  const eps=(23.439291111-0.013004167*T)*Math.PI/180;
+  const phi=lat*Math.PI/180;
+  const asc=((Math.atan2(-Math.cos(RAMC),Math.sin(RAMC)*Math.cos(eps)+Math.tan(phi)*Math.sin(eps))*180/Math.PI)%360+360)%360;
+  return signFromDeg(asc);
+}
+
+function renderRisingSection(risingSign,geoResult){
+  const el=document.getElementById('rising-status');
+  if(risingSign&&geoResult){
+    const signEl=SIGN_ELEM[risingSign]||'',signC=ELEM_COLOR[signEl]||'#888';
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:14px;padding:14px;background:#0d0d0d;border:1px solid #181818;border-radius:8px;margin-bottom:10px">
+      <div style="font-size:30px;font-weight:700;color:#e2e2e2;letter-spacing:-.03em;white-space:nowrap">${SIGN_EMOJI[risingSign]||''} ${risingSign}</div>
+      <div>
+        <div style="font-size:11px;color:#34d399;font-weight:600;letter-spacing:.04em;margin-bottom:3px">✓ AUTO-CALCULATED</div>
+        <div style="font-size:11px;color:#333;line-height:1.5">From birth time + ${state.birthCity}</div>
+        <div style="font-size:11px;color:${signC};margin-top:2px">${signEl} element</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#555;line-height:1.65;margin-bottom:10px">Your <strong style="color:#ccc">${risingSign} Rising</strong> is the energy you project on first impression — how clients read you before they know your track record. It's your professional first layer.</div>
+    <button onclick="toggleRisingOverride()" style="font-size:11px;color:#2e2e2e;background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;transition:color .15s" onmouseover="this.style.color='#555'" onmouseout="this.style.color='#2e2e2e'">Doesn't look right? Override manually</button>`;
+    updateAstroSignsRising(risingSign);
+    showAstroSummary(risingSign);
+  } else {
+    const noTime=!state.birthTime;
+    el.innerHTML=`<div style="font-size:12px;color:#555;line-height:1.65;margin-bottom:12px">${noTime?'Birth time is required to calculate your Rising sign.':'Couldn\'t locate your birth city automatically.'} Select your sign below if you know it, or skip for now.</div>
+    <select onchange="checkRisingManual(this.value)" style="background:#0d0d0d;border:1px solid #1e1e1e;border-radius:8px;color:#e2e2e2;font-family:Inter,sans-serif;font-size:14px;padding:12px 14px;width:100%">
+      <option value="">— select if you know it —</option>
+      <option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option>
+      <option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option>
+      <option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option>
+      <option value="skip">Skip for now</option>
+    </select>`;
+  }
+}
+
+function toggleRisingOverride(){
+  const ov=document.getElementById('rising-override');
+  ov.style.display=ov.style.display==='none'?'block':'none';
+}
+
+function updateAstroSignsRising(v){
+  const pills=document.querySelectorAll('#astro-signs .z-pill');
+  if(pills.length>=3){
+    const el=SIGN_ELEM[v]||'',c=ELEM_COLOR[el]||'#888';
+    pills[2].innerHTML=`<span style="font-size:11px;color:#383838">⬆️ Rising</span><strong>${SIGN_EMOJI[v]||''} ${v}</strong><span style="font-size:11px;color:${c}">${el}</span>`;
+  }
+}
+
+function showAstroSummary(v){
+  if(!v||v==='skip')return;
+  const el=SIGN_ELEM[v]||'',c=ELEM_COLOR[el]||'#888';
+  document.getElementById('astro-summary').style.display='block';
+  document.getElementById('astro-summary-text').innerHTML=`Your <strong style="color:#e2e2e2">Sun in ${state.sunSign}</strong> shapes your core drive. Your <strong style="color:#e2e2e2">Moon in ${state.moonSign}</strong> governs how you process emotion and build trust. Your <strong style="color:#e2e2e2">${v} Rising</strong> (<span style="color:${c}">${el}</span>) is the energy you project on first impression — how clients see you before they know your track record.`;
+}
+
+async function processAstro(){
+  const dStr=document.getElementById('b-date').value,tStr=document.getElementById('b-time').value,city=document.getElementById('b-city').value.trim();
+  if(!dStr)return;
+  const btn=document.getElementById('btn-astro-next');
+  btn.disabled=true;btn.textContent='Calculating…';
+  const d=new Date(dStr+'T'+(tStr||'12:00'));
+  state.birthDate=dStr;state.birthTime=tStr;state.birthCity=city;
+  state.sunSign=sunSign(d);state.moonSign=moonSign(d);state.risingSign=null;
+  let geoResult=null;
+  if(city){
+    geoResult=await geocodeCity(city);
+    if(geoResult){
+      state.birthLat=geoResult.lat;state.birthLon=geoResult.lon;
+      if(tStr)state.risingSign=calcAscendant(dStr,tStr,geoResult.lat,geoResult.lon);
+    }
+  }
+  const sunEl=SIGN_ELEM[state.sunSign]||'',moonEl=SIGN_ELEM[state.moonSign]||'',sunC=ELEM_COLOR[sunEl]||'#888',moonC=ELEM_COLOR[moonEl]||'#888';
+  const risingDisplay=state.risingSign?`<strong>${SIGN_EMOJI[state.risingSign]||''} ${state.risingSign}</strong>`:`<span style="color:#383838">— See below</span>`;
+  document.getElementById('astro-signs').innerHTML=`<div class="z-pill"><span style="font-size:11px;color:#383838">☀️ Sun Sign</span><strong>${SIGN_EMOJI[state.sunSign]||''} ${state.sunSign}</strong><span style="font-size:11px;color:${sunC}">${sunEl}</span></div><div class="z-pill"><span style="font-size:11px;color:#383838">🌙 Moon Sign</span><strong>${SIGN_EMOJI[state.moonSign]||''} ${state.moonSign}</strong><span style="font-size:11px;color:${moonC}">${moonEl} · Approx.</span></div><div class="z-pill"><span style="font-size:11px;color:#383838">⬆️ Rising</span>${risingDisplay}</div>`;
+  renderRisingSection(state.risingSign,geoResult);
+  btn.disabled=false;btn.textContent='Calculate My Signs →';
+  go('s1b');
+}
+
+function checkRisingManual(v){
+  if(v&&v!=='skip'){state.risingSign=v;updateAstroSignsRising(v);showAstroSummary(v);}
+  else{state.risingSign=null;}
+}
+
+function checkRising(){
+  const sel=document.getElementById('rising-select');
+  if(!sel)return;
+  const v=sel.value;
+  if(v){state.risingSign=v;updateAstroSignsRising(v);showAstroSummary(v);}
+}
+
+// ── MBTI TEST DATA ────────────────────────────────
+const MBTI_QS = [
+  // E/I
+  {dim:'EI',la:'E',lb:'I',q:'After a full day of back-to-back client calls and showings, you feel:',a:'Energized — the pace and the people fuel me.',b:'Drained — I need some quiet time to myself to recharge.'},
+  {dim:'EI',la:'E',lb:'I',q:'When you have great news for a client, your first move is:',a:'Call them immediately — I love delivering good news live.',b:'Think about how to frame it, then reach out.'},
+  {dim:'EI',la:'E',lb:'I',q:'At a real estate networking event, you naturally:',a:'Work the room — I enjoy meeting new people and the energy.',b:'Stay in focused one-on-one conversations — depth over breadth.'},
+  {dim:'EI',la:'E',lb:'I',q:'When working through a complicated deal strategy, you:',a:'Talk it through out loud — thinking with someone helps me.',b:'Think it through privately first, then share the plan.'},
+  {dim:'EI',la:'E',lb:'I',q:'Your energy source at work comes from:',a:'Being around clients and colleagues — the more interaction the better.',b:'Focused time alone to prepare, think, and recharge.'},
+  // S/N
+  {dim:'SN',la:'S',lb:'N',q:'When you evaluate a neighborhood for a client, you lead with:',a:'Concrete data — recent comps, days on market, school ratings, walk score.',b:'Your gut feeling — where this area is headed, the vibe, the momentum.'},
+  {dim:'SN',la:'S',lb:'N',q:'Your best listing descriptions tend to focus on:',a:'Specific features — beds, baths, finishes, lot size, exact location.',b:'The lifestyle the home enables — who lives here and what their life looks like.'},
+  {dim:'SN',la:'S',lb:'N',q:'When pricing a home, you rely most on:',a:'Recent comparable sales — the data tells the story.',b:'Your read of where the market is going — data plus instinct.'},
+  {dim:'SN',la:'S',lb:'N',q:'You learn a new MLS platform best by:',a:'Following the instructions step by step until I know it cold.',b:'Exploring and figuring it out as I go.'},
+  {dim:'SN',la:'S',lb:'N',q:'In a buyer consultation, you focus more on:',a:'Exactly what they want — specs, budget, must-haves, deal-breakers.',b:'What they really need — reading between the lines of what they say they want.'},
+  // T/F
+  {dim:'TF',la:'T',lb:'F',q:"When a client's emotional attachment is clouding their judgment about price, you:",a:"Give them the data straight — they hired me to be honest, not agreeable.",b:"Validate their feelings first, then gently ease them toward the numbers."},
+  {dim:'TF',la:'T',lb:'F',q:'A colleague makes an error in a contract. Your first instinct is:',a:'Address it directly and get it fixed — the relationship can handle honesty.',b:'Think carefully about how to bring it up without damaging the relationship.'},
+  {dim:'TF',la:'T',lb:'F',q:'When a seller rejects a reasonable offer, you feel:',a:'Frustrated by the illogic — emotion is getting in the way of a good decision.',b:'Empathy — I understand what they might be holding onto.'},
+  {dim:'TF',la:'T',lb:'F',q:'Your clients would describe your communication style as more:',a:'Direct and analytical — I give them the facts and the recommendation.',b:'Warm and understanding — I make sure they feel heard before I advise.'},
+  {dim:'TF',la:'T',lb:'F',q:'When two options are equal on paper, you choose based on:',a:'Logic — which one makes more objective sense.',b:'Feeling — which one feels right for this person.'},
+  // J/P
+  {dim:'JP',la:'J',lb:'P',q:'Your transaction files and to-do list are:',a:'Organized with a clear system — I know where everything is.',b:"Manageable but flexible — I work in a way that adapts as things shift."},
+  {dim:'JP',la:'J',lb:'P',q:'When a deal hits an unexpected snag, you:',a:'Have a contingency plan in place immediately — steps, timeline, resolution.',b:'Read the situation and adapt in the moment — plans change anyway.'},
+  {dim:'JP',la:'J',lb:'P',q:'Your ideal work week looks:',a:'Structured and planned — I know what I\'m doing each day.',b:'Open and responsive — I follow the energy and prioritize as things come in.'},
+  {dim:'JP',la:'J',lb:'P',q:'Deadlines feel like:',a:'Useful structure — they help me organize my work and set client expectations.',b:'Pressure I work well under — I tend to do my best work close to the wire.'},
+  {dim:'JP',la:'J',lb:'P',q:'After closing a deal, you:',a:'Debrief, file everything properly, and tie up all loose ends before moving on.',b:'Celebrate and move straight to the next opportunity — momentum matters.'},
+];
+
+// ── ENNEAGRAM DATA ────────────────────────────────
+const ENN_GROUPS = [
+  {type:1,label:'Type 1 — The Reformer',stmts:['I hold myself to a strict ethical standard, even when no one is watching.','Errors in paperwork genuinely bother me — they feel personal, not just professional.','I have strong opinions about the right way to handle a transaction.','I find it hard to move on from a mistake until I understand exactly why it happened.']},
+  {type:2,label:'Type 2 — The Helper',stmts:['I remember personal details about clients that they mentioned months ago.','I feel most satisfied when someone tells me I made a real difference in their experience.','I often put my clients\' needs ahead of my own schedule or energy.','Building long-term relationships matters to me more than just closing the deal.']},
+  {type:3,label:'Type 3 — The Achiever',stmts:['I track my rankings, numbers, and goals — I want to know exactly where I stand.','Losing a listing to another agent is something I genuinely find hard to shake.','I adapt how I present myself depending on who I\'m talking to — naturally, not fakely.','I want clients to see me as the most capable agent in the room.']},
+  {type:4,label:'Type 4 — The Individualist',stmts:['I want clients to feel that working with me is a different experience — not just a transaction.','I\'m drawn to the story of a home — not just its specs and square footage.','I sometimes feel that few people truly understand how deeply I care about this work.','A deal that felt personally meaningful can stay with me long after it closes.']},
+  {type:5,label:'Type 5 — The Investigator',stmts:['I prepare more thoroughly than most agents — I want to know everything before I advise.','I feel most confident when I know more than anyone else in the room.','I prefer to think something through privately before speaking up.','I can spend hours researching a market trend simply because I want to fully understand it.']},
+  {type:6,label:'Type 6 — The Loyalist',stmts:['I think ahead about what could go wrong before it happens.','My clients know they can count on me because I\'m consistent and I show up every time.','I can be skeptical when something seems too easy or too good to be true.','I value long-term client relationships more than one-time big scores.']},
+  {type:7,label:'Type 7 — The Enthusiast',stmts:['I get genuinely excited by new opportunities — new listings, new clients, new markets.','I\'m at my best when energy is high and things are moving fast.','I find it hard to stay focused on admin when there\'s real action happening.','I tend to look for the upside in every situation, even difficult ones.']},
+  {type:8,label:'Type 8 — The Challenger',stmts:['I speak my mind directly — I don\'t soften things unnecessarily when the truth matters.','I negotiate hard for my clients and I\'m comfortable with confrontation when it\'s needed.','I don\'t like being told what to do, especially by people who know less than I do.','Clients feel protected working with me — I\'m on their side and they know it.']},
+  {type:9,label:'Type 9 — The Peacemaker',stmts:['I can see both sides of a conflict and I naturally work to smooth things over.','My calm demeanor under pressure is something clients frequently comment on.','I can sometimes put off a difficult conversation longer than I should.','I prioritize harmony in my client relationships — tension makes it hard for me to do my best work.']},
+];
+
+const ETYPE_DATA = {
+  1:{name:'Reformer',tag:'Principled · Precise · Ethical',summary:'You hold yourself to the highest standard. Every transaction should be handled the right way — no shortcuts, no gray areas. Clients trust you because you\'re meticulous and reliable.',comm_rules:['Use precise, accurate language — vague phrases undermine your credibility','Acknowledge errors directly and briefly, then pivot to the fix','Short declarative sentences in high-stakes moments signal control'],forbidden:['good enough','probably fine','whatever works']},
+  2:{name:'Helper',tag:'Generous · Warm · Client-First',summary:'Relationships are your business model. Clients feel genuinely cared for. Your referral network is built on authentic connection.',comm_rules:['Open with the client\'s situation, not your update — lead with them','Use their name naturally in written communication','Close every message with what happens next so clients never wonder'],forbidden:['per my last email','as I mentioned','to clarify']},
+  3:{name:'Achiever',tag:'Driven · Polished · Results-Focused',summary:'You are a high performer who makes winning look effortless. Clients are attracted to your track record and your energy. You close deals.',comm_rules:['Lead with outcomes — clients buy results, not effort','Project confidence even when discussing uncertainty','Close every communication with a clear next action'],forbidden:['hopefully','we\'ll see','I\'ll try']},
+  4:{name:'Individualist',tag:'Authentic · Expressive · Deep',summary:'You bring depth and genuine insight to the work. Clients feel truly understood. Your listings have a voice. You don\'t do generic — and that\'s your edge.',comm_rules:['Trust your instinct for language — your natural voice is your brand','Lean into the specific and personal over the generic','Acknowledge the emotional weight of big decisions'],forbidden:['it is what it is','standard procedure','just checking in']},
+  5:{name:'Investigator',tag:'Analytical · Strategic · Expert',summary:'You know the market inside out. Clients come to you for insight no one else has. You prepare obsessively and your expertise is your brand.',comm_rules:['Lead with data and specific insight — that\'s your competitive advantage','Be concise — precision is valued over warmth in your voice','Establish expertise early in every client interaction'],forbidden:['I think maybe','I\'m not sure but','it depends']},
+  6:{name:'Loyalist',tag:'Trustworthy · Vigilant · Dependable',summary:'Clients know you have their back — even in scenarios they haven\'t thought of yet. You\'re the agent who anticipates problems before they surface.',comm_rules:['Reassure clients by showing you\'ve thought ahead','Close with what you\'re watching and what the plan is if it changes','Build loyalty by being the most consistent person in their transaction'],forbidden:['we\'ll cross that bridge','hopefully it works out','not sure yet']},
+  7:{name:'Enthusiast',tag:'Energetic · Creative · Optimistic',summary:'Your energy is contagious. You make the process feel exciting. Clients feel momentum when they work with you.',comm_rules:['Lead with possibility and opportunity — it\'s your natural frequency','Channel enthusiasm into specific outcomes, not just general excitement','Match energy to context — tone it down for serious moments'],forbidden:['to be honest','I have to say','actually']},
+  8:{name:'Challenger',tag:'Direct · Powerful · Protective',summary:'You negotiate hard for your clients and they know it. You don\'t soften things unnecessarily. Your directness is your value proposition.',comm_rules:['Be direct — never bury the lead','Frame directness as advocacy: you\'re fighting for them','Match directness with warmth — strength without coldness'],forbidden:['I don\'t want to be difficult but','sorry to bother you','I might be wrong but']},
+  9:{name:'Peacemaker',tag:'Calm · Steady · Reassuring',summary:'You are the agent who keeps everyone calm when deals get complicated. Your steadiness is a competitive advantage in high-stress transactions.',comm_rules:['Use your calm tone as a deliberate communication tool','Be clear and decisive — your clients need to know you\'ll act','Don\'t over-soften difficult news — clarity is kindness'],forbidden:['whatever you think','either way is fine','no big deal']},
+};
+
+const ESTP_DATA = {
+  summary:'ESTP — The Entrepreneur. In real estate, you read clients instantly, adapt on the fly, and thrive in the high-energy moments — showings, negotiations, closes. You are pragmatic, direct, and deeply perceptive of people.',
+  comm_rules:['Lead with the punchline — most important thing first, always','Keep it moving — short messages signal confidence and control','Name what you observed: "I noticed…" "I could tell…" — your perceptive reads are your superpower','Direct over diplomatic — clients trust honesty more than softness','End with action: what you\'re doing and when you\'ll be back'],
+  forbidden:['per my last email','just circling back','hope this finds you well','don\'t hesitate to reach out','as per','touch base'],
+};
+
+// ── STATE ────────────────────────────────
+let state = {birthDate:null,birthTime:null,birthCity:null,birthLat:null,birthLon:null,sunSign:null,moonSign:null,risingSign:null,mbtiAnswers:{},mbtiCurrent:0,ennAnswers:{},ennGroup:0,voiceNotes:{},finalProfile:null};
+let history = JSON.parse(localStorage.getItem('lisa_history')||'[]');
+let checkinInterval = parseInt(localStorage.getItem('lisa_checkin_days')||'30');
+let lastCheckin = localStorage.getItem('lisa_last_checkin');
+
+// ── NAVIGATION ────────────────────────────────
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);if(id==='s2'){state.mbtiCurrent=0;renderMbti();}if(id==='s3'){state.ennGroup=0;renderEnn();}if(id==='s5')renderCheckin();if(id==='s6')renderMonitor();}
+function goIntroNext(){if(history.length>0){go('s6');return;}go('s0');}
+
+// ── MBTI ENGINE ────────────────────────────────
+const DIM_LABELS = {EI:'Energy Style',SN:'Information Style',TF:'Decision Style',JP:'Work Style'};
+function renderMbti(){
+  const q=MBTI_QS[state.mbtiCurrent],total=MBTI_QS.length,pct=Math.round((state.mbtiCurrent/total)*100);
+  document.getElementById('mbti-counter').textContent=`${state.mbtiCurrent+1} of ${total}`;
+  document.getElementById('mbti-dim-label').textContent=DIM_LABELS[q.dim]||q.dim;
+  document.getElementById('mbti-pct').textContent=pct+'%';
+  document.getElementById('mbti-pfill').style.width=pct+'%';
+  document.getElementById('mbti-back').style.visibility=state.mbtiCurrent===0?'hidden':'visible';
+  const saved=state.mbtiAnswers[state.mbtiCurrent];
+  document.getElementById('mbti-next').disabled=saved===undefined;
+  document.getElementById('mbti-area').innerHTML=`<div class="fade-in">
+    <div style="font-size:13px;color:#383838;margin-bottom:10px">Which feels more like you?</div>
+    <h2 style="font-size:19px;font-weight:700;letter-spacing:-.02em;line-height:1.35;margin-bottom:24px;color:#e2e2e2">${q.q}</h2>
+    <div style="display:flex;gap:12px">
+      <div class="mbti-opt ${saved==='a'?'sel':''}" onclick="selMbti('a')" id="mo-a">
+        <div class="mbti-letter" id="ml-a">${q.la}</div>
+        <div style="font-size:12px;color:#666;line-height:1.5;text-align:center">${q.a}</div>
+      </div>
+      <div class="mbti-opt ${saved==='b'?'sel':''}" onclick="selMbti('b')" id="mo-b">
+        <div class="mbti-letter" id="ml-b">${q.lb}</div>
+        <div style="font-size:12px;color:#666;line-height:1.5;text-align:center">${q.b}</div>
+      </div>
+    </div>
+  </div>`;
+}
+function selMbti(v){state.mbtiAnswers[state.mbtiCurrent]=v;document.getElementById('mbti-next').disabled=false;['a','b'].forEach(x=>{document.getElementById(`mo-${x}`).classList.toggle('sel',x===v);document.getElementById(`ml-${x}`).style.color=x===v?'#e2e2e2':'#383838';});}
+function mbtiNext(){if(state.mbtiCurrent<MBTI_QS.length-1){state.mbtiCurrent++;renderMbti();}else{go('s3');}}
+function mbtiPrev(){if(state.mbtiCurrent>0){state.mbtiCurrent--;renderMbti();}else go('s1b');}
+function scoreMbti(){const dims={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};MBTI_QS.forEach((q,i)=>{const v=state.mbtiAnswers[i];if(v){dims[v==='a'?q.la:q.lb]++;}});return[dims.E>=dims.I?'E':'I',dims.S>=dims.N?'S':'N',dims.T>=dims.F?'T':'F',dims.J>=dims.P?'J':'P'].join('');}
+
+// ── ENNEAGRAM ENGINE ────────────────────────────────
+function renderEnn(){
+  const grp=ENN_GROUPS[state.ennGroup],total=ENN_GROUPS.length,pct=Math.round((state.ennGroup/total)*100);
+  document.getElementById('enn-group-label').textContent=`Group ${state.ennGroup+1} of ${total}`;
+  document.getElementById('enn-type-label').textContent=grp.label;
+  document.getElementById('enn-pct').textContent=pct+'%';
+  document.getElementById('enn-pfill').style.width=pct+'%';
+  document.getElementById('enn-back').style.visibility=state.ennGroup===0?'hidden':'visible';
+  const saved=state.ennAnswers[grp.type]||{};
+  const allAnswered=grp.stmts.every((_,i)=>saved[i]!==undefined);
+  document.getElementById('enn-next').disabled=!allAnswered;
+  document.getElementById('enn-next').textContent=state.ennGroup===total-1?'Build My Results':'Continue';
+  document.getElementById('enn-area').innerHTML=`<div class="fade-in">
+    <div style="font-size:13px;color:#383838;margin-bottom:8px">Rate each statement — how much does this sound like you?</div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:#2e2e2e;margin-bottom:16px;letter-spacing:.06em"><span>NOT LIKE ME</span><span>VERY MUCH LIKE ME</span></div>
+    <h2 style="font-size:17px;font-weight:600;letter-spacing:-.01em;color:#ccc;margin-bottom:16px">${grp.label}</h2>
+    ${grp.stmts.map((s,i)=>`
+      <div class="likert-row">
+        <div style="font-size:13px;color:#999;line-height:1.6;margin-bottom:12px">${s}</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          ${[1,2,3,4,5].map(v=>`<button class="likert-btn ${saved[i]===v?`sel-${v}`:''}" onclick="selEnn(${grp.type},${i},${v})" id="eb-${grp.type}-${i}-${v}">${v}</button>`).join('')}
+          <span style="font-size:10px;color:#252525;margin-left:6px">${saved[i]?['','Not me','Somewhat','Neutral','Mostly','Definitely'][saved[i]]:''}</span>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+function selEnn(type,stmtIdx,val){if(!state.ennAnswers[type])state.ennAnswers[type]={};state.ennAnswers[type][stmtIdx]=val;[1,2,3,4,5].forEach(v=>{const b=document.getElementById(`eb-${type}-${stmtIdx}-${v}`);if(b){b.className=`likert-btn${v===val?' sel-'+v:''}`;}});const grp=ENN_GROUPS[state.ennGroup];const saved=state.ennAnswers[grp.type]||{};const allAnswered=grp.stmts.every((_,i)=>saved[i]!==undefined);document.getElementById('enn-next').disabled=!allAnswered;}
+function ennNext(){if(state.ennGroup<ENN_GROUPS.length-1){state.ennGroup++;renderEnn();}else{go('s2b');}}
+function ennPrev(){if(state.ennGroup>0){state.ennGroup--;renderEnn();}else go('s2');}
+function scoreEnn(){const scores={};ENN_GROUPS.forEach(g=>{const ans=state.ennAnswers[g.type]||{};const total=Object.values(ans).reduce((a,b)=>a+b,0);scores[g.type]=total;});const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);const top=parseInt(sorted[0][0]);const s2=parseInt(sorted[1][0]);const wing=(Math.abs(s2-top)===1)?s2:(top===1?9:top-1);return{type:top,wing:`${top}w${wing}`,data:ETYPE_DATA[top]};}
+
+// ── VOICE NOTES ────────────────────────────────
+function saveVoiceNotes(){state.voiceNotes={lowball_handling:document.getElementById('vn-lowball').value.trim(),new_buyer_opener:document.getElementById('vn-opener').value.trim(),banned_phrases:document.getElementById('vn-banned').value.trim(),bad_news_close:document.getElementById('vn-bad-news').value.trim(),other:document.getElementById('vn-other').value.trim()};buildAndShowResults();}
+
+// ── SYNTHESIS ────────────────────────────────
+function buildAndShowResults(){
+  const mbti=scoreMbti();
+  const enn=scoreEnn();
+  const allRules=[...new Set([...ESTP_DATA.comm_rules,...(enn.data.comm_rules||[]),'Lead with the client\'s situation, not your own action','Use Capricorn\'s directness: structured, grounded, no fluff'])];
+  const allForbidden=[...new Set([...ESTP_DATA.forbidden,...(enn.data.forbidden||[]),'as per my last email','just circling back','hope this finds you well'])];
+  const sources=['LISA MBTI Quiz','LISA Enneagram Quiz','Astrology'];
+  if(state.sunSign)sources.push('Birth Data');
+  const profile={name:'LISA',version:'2.0',generated:new Date().toISOString().split('T')[0],last_updated:new Date().toISOString(),sources,sun_sign:state.sunSign||'Capricorn',moon_sign:state.moonSign||null,rising_sign:state.risingSign||null,birth_city:state.birthCity||null,capricorn_traits:['structured','methodical','quiet authority','directness','goal-oriented','professionally warm'],enneagram:{type:enn.type,wing:enn.wing,name:enn.data.name,tagline:enn.data.tag,core_summary:enn.data.summary},mbti:{type:mbti,confirmed_estp:true},communication_rules:allRules,forbidden_phrases:allForbidden,voice_notes:state.voiceNotes||{},monitoring:{check_in_interval_days:checkinInterval,last_updated:new Date().toISOString(),version_count:history.length+1}};
+  state.finalProfile=profile;
+  history.push({timestamp:new Date().toISOString(),label:`v${history.length+1}`,profile});
+  localStorage.setItem('lisa_history',JSON.stringify(history));
+  localStorage.setItem('lisa_last_checkin',new Date().toISOString());
+  renderResults(profile,enn,mbti);
+  go('s4');
+}
+
+function renderResults(profile,enn,mbti){
+  document.getElementById('r-types').innerHTML=`<div class="type-box"><div class="lbl mb-2">Enneagram</div><div class="type-num">${enn.wing}</div><div style="font-size:13px;font-weight:600;color:#ccc;margin-top:8px">${enn.data.name}</div><div style="font-size:11px;color:#444;margin-top:3px">${enn.data.tag}</div></div><div class="type-box"><div class="lbl mb-2">MBTI</div><div class="type-num" style="color:#a78bfa">${mbti}</div><div style="font-size:13px;font-weight:600;color:#ccc;margin-top:8px">The Entrepreneur</div><div style="font-size:11px;color:#444;margin-top:3px">Bold · Direct · Action-driven</div></div>`;
+  if(profile.sun_sign){document.getElementById('r-zodiac').innerHTML=[['☀️','Sun',profile.sun_sign],['🌙','Moon',profile.moon_sign||'—'],['⬆️','Rising',profile.rising_sign||'Pending']].map(([e,l,v])=>`<div class="z-pill"><span style="font-size:11px;color:#383838">${e} ${l}</span><strong>${SIGN_EMOJI[v]||''} ${v}</strong></div>`).join('');}
+  document.getElementById('r-sources').innerHTML=profile.sources.map(s=>`<div class="src-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>${s}</div>`).join('');
+  document.getElementById('r-summary').innerHTML=`<p style="margin-bottom:10px">${ESTP_DATA.summary}</p><p style="color:#555">${enn.data.summary}</p>`;
+  document.getElementById('r-rules').innerHTML=profile.communication_rules.slice(0,6).map(r=>`<div class="flex items-start gap-3"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" style="margin-top:3px;min-width:13px"><polyline points="20 6 9 17 4 12"/></svg><div style="font-size:13px;color:#666;line-height:1.6">${r}</div></div>`).join('');
+  document.getElementById('r-forbidden').innerHTML=profile.forbidden_phrases.map(p=>`<div style="display:inline-flex;align-items:center;gap:5px;background:#0d0d0d;border:1px solid #181818;border-radius:5px;padding:4px 9px"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span style="font-size:11px;color:#444">${p}</span></div>`).join('');
+  document.getElementById('r-json').textContent=JSON.stringify(profile,null,2);
+}
+
+function downloadJSON(){if(!state.finalProfile&&history.length===0)return;const p=state.finalProfile||history[history.length-1]?.profile;const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='LISA_personality.json';a.click();URL.revokeObjectURL(url);}
+
+// ── EMAIL ────────────────────────────────
+function emailResults(){
+  const p=state.finalProfile;if(!p)return;
+  const vn=state.voiceNotes||{};
+  const subj=encodeURIComponent('LISA Profile Complete — My Results');
+  const body=encodeURIComponent(`LISA Personality Profile — Completed ${new Date().toLocaleDateString()}\n${'═'.repeat(50)}\n\nENNEAGRAM:  ${p.enneagram?.wing||'—'} · ${p.enneagram?.name||''}\nMBTI:       ${p.mbti?.type||'ESTP'}\nSUN SIGN:   ${p.sun_sign||'—'}\nMOON SIGN:  ${p.moon_sign||'—'}\nRISING:     ${p.rising_sign||'Pending'}\n\n${'─'.repeat(50)}\nCOMMUNICATION RULES\n${'─'.repeat(50)}\n${(p.communication_rules||[]).map((r,i)=>`${i+1}. ${r}`).join('\n')}\n\n${'─'.repeat(50)}\nPHRASES LISA WILL NEVER USE\n${'─'.repeat(50)}\n${(p.forbidden_phrases||[]).map(f=>`• ${f}`).join('\n')}\n\n${'─'.repeat(50)}\nMY VOICE NOTES\n${'─'.repeat(50)}\nLowball offers:\n${vn.lowball_handling||'(not filled in)'}\n\nNew buyer opener:\n${vn.new_buyer_opener||'(not filled in)'}\n\nBanned phrases:\n${vn.banned_phrases||'(not filled in)'}\n\nBad news close:\n${vn.bad_news_close||'(not filled in)'}\n\nOther notes:\n${vn.other||'(not filled in)'}\n\n${'─'.repeat(50)}\nSent via LISA app · Powered by Claude (Anthropic)`);
+  window.location.href=`mailto:${SETUP_EMAIL}?subject=${subj}&body=${body}`;
+  toast('Opening your email app…');
+}
+
+// ── CHECK-IN ────────────────────────────────
+const CHECKIN_QS=[
+  {id:'ci1',q:'After a long day of client calls, I feel:',opts:[{t:'Energized — I love the pace.',v:'E'},{t:'Drained — I need quiet time.',v:'I'}]},
+  {id:'ci2',q:'My communication right now leans:',opts:[{t:'Punchy and direct.',v:'T'},{t:'Thoughtful and warm.',v:'F'}]},
+  {id:'ci3',q:'This month I\'ve been motivated most by:',opts:[{t:'Closing deals and hitting numbers.',v:'E3'},{t:'Building relationships and trust.',v:'E2'},{t:'Getting everything perfectly right.',v:'E1'},{t:'Feeling connected to meaningful work.',v:'E4'}]},
+  {id:'ci4',q:'When something unexpected hits a deal, I:',opts:[{t:'Have a plan immediately.',v:'J'},{t:'Read the room and adapt.',v:'P'}]},
+  {id:'ci5',q:'Something that\'s shifted for me lately (optional):',type:'text'},
+];
+let ciAnswers={};
+function startCheckin(){ciAnswers={};go('s5');}
+function renderCheckin(){document.getElementById('ci-area').innerHTML=CHECKIN_QS.map((q,qi)=>`<div class="card p-4"><div style="font-size:13px;font-weight:500;color:#ccc;margin-bottom:12px;line-height:1.5">${q.q}</div>${q.type==='text'?`<textarea id="ci-text" rows="3" placeholder="e.g. I've been feeling more introverted than usual..." oninput="updateCiNext()"></textarea>`:`<div class="flex flex-col gap-2">${q.opts.map((o,oi)=>`<div class="opt ${ciAnswers[q.id]===oi?'sel':''}" onclick="selCI('${q.id}',${oi},${qi})" id="cio${qi}-${oi}"><div class="flex items-start gap-3"><div class="dot ${ciAnswers[q.id]===oi?'sel':''}" id="cid${qi}-${oi}"></div><div style="font-size:13px;color:#bbb;line-height:1.5">${o.t}</div></div></div>`).join('')}</div>`}</div>`).join('');}
+function selCI(qid,oi,qi){ciAnswers[qid]=oi;const q=CHECKIN_QS[qi];q.opts.forEach((_,j)=>{document.getElementById(`cio${qi}-${j}`)?.classList.toggle('sel',j===oi);document.getElementById(`cid${qi}-${j}`)?.classList.toggle('sel',j===oi);});updateCiNext();}
+function updateCiNext(){const answered=CHECKIN_QS.filter(q=>q.type!=='text').every(q=>ciAnswers[q.id]!==undefined);document.getElementById('ci-next').disabled=!answered;}
+function submitCheckin(){
+  const notes=document.getElementById('ci-text')?.value||'';
+  const snapshot={timestamp:new Date().toISOString(),label:`Check-in v${history.length+1}`,profile:state.finalProfile||history[history.length-1]?.profile,checkin_notes:notes,checkin_answers:{...ciAnswers}};
+  history.push(snapshot);localStorage.setItem('lisa_history',JSON.stringify(history));localStorage.setItem('lisa_last_checkin',new Date().toISOString());
+  const p=snapshot.profile;
+  const subj=encodeURIComponent(`LISA Check-In #${history.length} — ${new Date().toLocaleDateString()}`);
+  const bdy=encodeURIComponent(`LISA Personality Check-In — ${new Date().toLocaleString()}\n${'═'.repeat(44)}\n\nCurrent: ${p?.enneagram?.wing||'—'} · ${p?.mbti?.type||'ESTP'} · ${p?.sun_sign||'—'} Sun\n\nNotes:\n${notes||'(none)'}\n\n— LISA Monitor`);
+  setTimeout(()=>{window.location.href=`mailto:${SETUP_EMAIL}?subject=${subj}&body=${bdy}`;},800);
+  toast('Check-in saved. Sending summary to your setup team…');
+  go('s6');
+}
+
+// ── MONITOR ────────────────────────────────
+function renderMonitor(){document.getElementById('intro-monitor-btn').style.display=history.length?'block':'none';document.getElementById('w-monitor-btn').style.display=history.length?'block':'none';renderOverview();renderHistoryTab();renderDriftTab();}
+function switchTab(t){['overview','history','drift','ideas'].forEach(n=>{document.getElementById(`tab-${n}`).classList.toggle('active',n===t);document.getElementById(`tab-content-${n}`).style.display=n===t?'block':'none';});if(t==='ideas'){renderIdeasLog();document.getElementById('ideas-dot').style.display='none';}}
+function renderOverview(){const latest=history[history.length-1];const p=latest?.profile;const daysSince=lastCheckin?Math.floor((Date.now()-new Date(lastCheckin))/86400000):null;const dueIn=daysSince!==null?checkinInterval-daysSince:null;const overdue=dueIn!==null&&dueIn<=0;document.getElementById('m-stat-row').innerHTML=`<div class="card p-4"><div class="lbl mb-2">Profile Version</div><div style="font-size:26px;font-weight:700;letter-spacing:-.03em;color:#e2e2e2">${history.length}</div><div style="font-size:11px;color:#383838;margin-top:4px">snapshots saved</div></div><div class="card p-4"><div class="lbl mb-2">Last Updated</div><div style="font-size:26px;font-weight:700;letter-spacing:-.03em;color:${overdue?'#f87171':'#e2e2e2'}">${daysSince!==null?daysSince+'d':'—'}</div><div style="font-size:11px;color:#383838;margin-top:4px">${overdue?'⚠️ overdue':'days ago'}</div></div><div class="card p-4"><div class="lbl mb-2">Next Check-In</div><div style="font-size:26px;font-weight:700;letter-spacing:-.03em;color:${overdue?'#f87171':'#34d399'}">${dueIn!==null?(overdue?'Now':`${dueIn}d`):'—'}</div><div style="font-size:11px;color:#383838;margin-top:4px">${checkinInterval}d interval</div></div>`;
+  document.getElementById('m-current-profile').innerHTML=p?`<div class="lbl mb-3">Current Profile</div><div class="flex flex-wrap gap-3 mb-4"><div><div class="lbl mb-1">Enneagram</div><div style="font-size:18px;font-weight:700;color:#e2e2e2">${p.enneagram?.wing||'—'}</div></div><div style="margin-left:20px"><div class="lbl mb-1">MBTI</div><div style="font-size:18px;font-weight:700;color:#a78bfa">${p.mbti?.type||'ESTP'}</div></div>${p.sun_sign?`<div style="margin-left:20px"><div class="lbl mb-1">Sun</div><div style="font-size:18px;font-weight:700;color:#fbbf24">${p.sun_sign}</div></div>`:''}</div><div style="font-size:12px;color:#333">Last updated ${new Date(p.last_updated||p.generated).toLocaleDateString()}</div>`:`<div style="font-size:14px;color:#333;text-align:center;padding:24px 0">No profile yet</div>`;
+  document.getElementById('m-schedule').innerHTML=`<div class="lbl mb-3">Check-In Schedule</div><div style="font-size:13px;color:#555;line-height:1.6;margin-bottom:14px">LISA runs a 5-question calibration every <strong style="color:#ccc">${checkinInterval} days</strong> to detect personality drift.</div><div class="flex items-center gap-2">${[14,30,60,90].map(d=>`<button onclick="setInterval_(${d})" class="btn-g" style="padding:7px 12px;font-size:12px;${checkinInterval===d?'border-color:#e2e2e2;color:#e2e2e2;':''}">${d}d</button>`).join('')}</div>`;}
+function setInterval_(d){checkinInterval=d;localStorage.setItem('lisa_checkin_days',d);renderOverview();toast(`Check-in interval set to ${d} days`);}
+function renderHistoryTab(){const list=document.getElementById('m-history-list'),empty=document.getElementById('m-history-empty');if(history.length===0){list.style.display='none';empty.style.display='block';return;}list.style.display='flex';empty.style.display='none';list.innerHTML=[...history].reverse().map(s=>{const p=s.profile,isCI=!!s.checkin_answers;return`<div class="snapshot"><div class="flex items-center justify-between mb-2"><div style="font-size:13px;font-weight:500;color:#ccc">${s.label}</div><div class="flex items-center gap-2"><span class="${isCI?'badge-y':'badge-b'}">${isCI?'Check-in':'Full Profile'}</span><span style="font-size:11px;color:#333">${new Date(s.timestamp).toLocaleDateString()}</span></div></div><div class="flex gap-3 flex-wrap">${p?.enneagram?.wing?`<span style="font-size:12px;color:#777">Enneagram <strong style="color:#ccc">${p.enneagram.wing}</strong></span>`:''} ${p?.mbti?.type?`<span style="font-size:12px;color:#777">MBTI <strong style="color:#a78bfa">${p.mbti.type}</strong></span>`:''}</div>${s.checkin_notes?`<div style="font-size:12px;color:#444;margin-top:8px;font-style:italic">"${s.checkin_notes}"</div>`:''}</div>`;}).join('');}
+function renderDriftTab(){const el=document.getElementById('m-drift-content');if(history.length<2){el.innerHTML=`<div class="card p-6 text-center"><div style="font-size:14px;color:#333">Need at least 2 snapshots to analyze drift</div></div>`;return;}const latest=history[history.length-1].profile,prev=history[history.length-2].profile;const diffs=[];if(latest?.enneagram?.type!==prev?.enneagram?.type)diffs.push({dim:'Enneagram Type',old:prev?.enneagram?.wing,cur:latest?.enneagram?.wing,level:'high'});if(latest?.mbti?.type!==prev?.mbti?.type)diffs.push({dim:'MBTI',old:prev?.mbti?.type,cur:latest?.mbti?.type,level:'medium'});el.innerHTML=`<div class="card p-5"><div class="lbl mb-3">Drift Summary</div><div style="font-size:13px;color:#666;margin-bottom:12px">Comparing <strong style="color:#ccc">v${history.length}</strong> to <strong style="color:#ccc">v${history.length-1}</strong></div>${diffs.length===0?`<div class="flex items-center gap-2"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><div style="font-size:13px;color:#34d399">Profile is stable — no significant drift</div></div>`:diffs.map(d=>`<div style="background:#0d0d0d;border:1px solid #181818;border-radius:8px;padding:12px 14px;margin-bottom:8px"><div class="flex items-center justify-between mb-1"><div style="font-size:13px;font-weight:500;color:#ccc">${d.dim}</div><span class="${d.level==='high'?'badge-y':'badge-b'}">${d.level}</span></div><div style="font-size:12px;color:#555">${d.old||'—'} → <span style="color:#ccc">${d.cur||'—'}</span></div></div>`).join('')}</div>`;}
+
+// ── IDEAS ────────────────────────────────
+let ideasLog=JSON.parse(localStorage.getItem('lisa_ideas')||'[]');
+function sendIdea(){const text=document.getElementById('idea-input').value.trim();if(!text){toast('Write something first!');return;}const entry={timestamp:new Date().toISOString(),text,sent:true};ideasLog.unshift(entry);localStorage.setItem('lisa_ideas',JSON.stringify(ideasLog));localStorage.removeItem('lisa_idea_draft');const subj=encodeURIComponent(`LISA — Note from Mom · ${new Date().toLocaleDateString()}`);const bdy=encodeURIComponent(`Note from Lisa — ${new Date().toLocaleString()}\n${'═'.repeat(44)}\n\n${text}\n\n${'─'.repeat(44)}\nSent via LISA app · Ideas & Requests tab`);document.getElementById('idea-input').value='';renderIdeasLog();toast('Opening your email app…');setTimeout(()=>{window.location.href=`mailto:${SETUP_EMAIL}?subject=${subj}&body=${bdy}`;},500);}
+function saveIdeaDraft(){const text=document.getElementById('idea-input').value;localStorage.setItem('lisa_idea_draft',text);document.getElementById('ideas-dot').style.display='block';toast('Draft saved.');}
+function renderIdeasLog(){const log=document.getElementById('ideas-log'),empty=document.getElementById('ideas-log-empty');const draft=localStorage.getItem('lisa_idea_draft');if(draft&&!document.getElementById('idea-input').value)document.getElementById('idea-input').value=draft;if(ideasLog.length===0){log.style.display='none';empty.style.display='block';return;}log.style.display='flex';empty.style.display='none';log.innerHTML=ideasLog.map(e=>`<div style="background:#0d0d0d;border:1px solid #181818;border-radius:8px;padding:14px 16px"><div class="flex items-center justify-between mb-2"><span style="font-size:11px;color:#2e2e2e">${new Date(e.timestamp).toLocaleString()}</span><span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#34d399"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Sent</span></div><div style="font-size:13px;color:#666;line-height:1.65;white-space:pre-wrap">${e.text}</div></div>`).join('');}
+
+// ── TOAST ────────────────────────────────
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+// ── INIT ────────────────────────────────
+(function init(){
+  if(history.length>0){
+    document.getElementById('intro-monitor-btn').style.display='block';
+    document.getElementById('w-monitor-btn').style.display='block';
+    const latest=history[history.length-1].profile;
+    if(latest)state.finalProfile=latest;
+  }
+  if(localStorage.getItem('lisa_idea_draft')){const dot=document.getElementById('ideas-dot');if(dot)dot.style.display='block';}
+})();
+</script>
+</body>
+</html>
