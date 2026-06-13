@@ -37,7 +37,13 @@ textarea{resize:vertical;line-height:1.6}
 .badge-y{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600}
 .badge-g{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600}
 .badge-b{background:rgba(99,179,237,.1);color:#63b3ed;border:1px solid rgba(99,179,237,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600}
-.badge-p{background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600}
+.badge-p{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600}
+.badge-a{background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.25);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600}
+.tool-card{background:#0d0d0d;border:1px solid #181818;border-radius:12px;padding:20px;margin-bottom:12px}
+.tool-output{background:#060606;border:1px solid #141414;border-radius:8px;padding:16px;font-size:13px;color:#888;line-height:1.75;white-space:pre-wrap;min-height:80px;margin-top:12px;display:none}
+.connect-card{background:#0d0d0d;border:1px solid #181818;border-radius:12px;padding:20px;margin-bottom:10px;display:flex;align-items:center;gap:16px}
+.connect-icon{width:40px;height:40px;border-radius:10px;border:1px solid #1c1c1c;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.estp-card{background:linear-gradient(135deg,rgba(245,158,11,.06) 0%,rgba(245,158,11,.02) 100%);border:1px solid rgba(245,158,11,.15);border-radius:12px;padding:20px;margin-bottom:16px}
 .type-box{background:#101010;border:1px solid #1c1c1c;border-radius:12px;padding:22px;text-align:center}
 .type-num{font-size:42px;font-weight:700;letter-spacing:-.04em;line-height:1}
 .snapshot{background:#0d0d0d;border:1px solid #181818;border-radius:8px;padding:14px 16px}
@@ -75,7 +81,7 @@ textarea{resize:vertical;line-height:1.6}
 
 <!-- ══ INTRO SCREEN ══ -->
 <div class="screen active flex-col justify-between" id="s-intro" style="min-height:100vh;background:#080808;overflow:hidden;position:relative;">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(167,139,250,0.06) 0%, transparent 70%);pointer-events:none"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(245,158,11,0.07) 0%, transparent 70%);pointer-events:none"></div>
   <div class="flex items-center justify-between px-8 py-6" style="position:relative;z-index:1">
     <div class="flex items-center gap-3">
       <div style="width:32px;height:32px;background:#e2e2e2;border-radius:9px;display:flex;align-items:center;justify-content:center"><span style="font-size:14px;font-weight:700;color:#080808">L</span></div>
@@ -87,7 +93,7 @@ textarea{resize:vertical;line-height:1.6}
     <div style="font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#383838;margin-bottom:20px">For Lisa · Real Estate Professional</div>
     <h1 style="font-size:clamp(32px,6vw,58px);font-weight:700;letter-spacing:-.04em;line-height:1.08;color:#e2e2e2;max-width:720px;margin-bottom:24px">
       You didn't build your career<br/>
-      <span style="color:#a78bfa">waiting for the right moment.</span><br/>
+      <span style="color:#f59e0b">waiting for the right moment.</span><br/>
       This is it.
     </h1>
     <p style="font-size:clamp(15px,2vw,18px);color:#4a4a4a;line-height:1.7;max-width:540px;margin-bottom:40px">
@@ -110,8 +116,8 @@ textarea{resize:vertical;line-height:1.6}
         <div style="font-size:12px;color:#3e3e3e;line-height:1.65">You know how to build a real relationship. AI can't teach that. But AI can handle everything that used to eat the time you'd rather spend doing exactly that.</div>
       </div>
     </div>
-    <div style="background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);border-radius:12px;padding:20px 28px;max-width:560px;width:100%;margin-bottom:44px;text-align:left">
-      <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#6d4e9e;margin-bottom:10px">Where LISA is taking you</div>
+    <div style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.15);border-radius:12px;padding:20px 28px;max-width:560px;width:100%;margin-bottom:44px;text-align:left">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#b07d20;margin-bottom:10px">Where LISA is taking you</div>
       <p style="font-size:13px;color:#888;line-height:1.75">LISA learns who you are — how you write, how you think, what you sound like. Then she drafts every email, text, and listing in <strong style="color:#ccc">your exact voice.</strong> Everything she produces lands in a review queue. <strong style="color:#ccc">You always have the final say.</strong> No auto-sends. No surprises. Just a version of you that never gets tired.</p>
     </div>
     <div class="flex flex-col items-center gap-3" style="width:100%;max-width:360px">
@@ -142,7 +148,7 @@ textarea{resize:vertical;line-height:1.6}
   <p style="font-size:14px;color:#4a4a4a;line-height:1.7;margin-bottom:32px">Everything is built right here — no websites to visit, no accounts to create, no sign-up screens. Just you and the questions.</p>
   <div class="card p-5 mb-8 flex flex-col gap-3">
     <div class="flex items-center gap-3">
-      <div style="width:26px;height:26px;background:#141414;border-radius:7px;border:1px solid #1c1c1c;display:flex;align-items:center;justify-content:center;font-size:12px;color:#a78bfa;font-weight:700">1</div>
+      <div style="width:26px;height:26px;background:#141414;border-radius:7px;border:1px solid #1c1c1c;display:flex;align-items:center;justify-content:center;font-size:12px;color:#f59e0b;font-weight:700">1</div>
       <div><div style="font-size:13px;font-weight:500;color:#ccc">Astrology intake</div><div style="font-size:11px;color:#383838">Birth date, time &amp; city → Sun, Moon, Rising signs</div></div>
     </div>
     <div class="flex items-center gap-3">
@@ -350,7 +356,7 @@ textarea{resize:vertical;line-height:1.6}
         <div style="font-size:11px;color:#444;margin-top:2px">Your son set this up for you — tap below to send him your completed profile</div>
       </div>
     </div>
-    <button class="btn-p w-full" onclick="emailResults()" style="background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.25)">
+    <button class="btn-p w-full" onclick="emailResults()" style="background:rgba(167,139,250,0.15);color:#f59e0b;border:1px solid rgba(167,139,250,0.25)">
       <svg style="display:inline;margin-right:6px" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
       Send Profile Results →
     </button>
@@ -402,22 +408,220 @@ textarea{resize:vertical;line-height:1.6}
     <div class="max-w-2xl mx-auto">
       <div class="flex items-center gap-1 mb-6 p-1" style="background:#0d0d0d;border:1px solid #181818;border-radius:9px;width:fit-content;flex-wrap:wrap">
         <div class="nav-tab active" id="tab-overview" onclick="switchTab('overview')">Overview</div>
+        <div class="nav-tab" id="tab-tools" onclick="switchTab('tools')">🛠 Tools</div>
         <div class="nav-tab" id="tab-history" onclick="switchTab('history')">History</div>
         <div class="nav-tab" id="tab-drift" onclick="switchTab('drift')">Drift</div>
         <div class="nav-tab" id="tab-ideas" onclick="switchTab('ideas')" style="position:relative">
           Ideas
-          <span id="ideas-dot" style="display:none;position:absolute;top:6px;right:6px;width:5px;height:5px;background:#a78bfa;border-radius:50%"></span>
+          <span id="ideas-dot" style="display:none;position:absolute;top:6px;right:6px;width:5px;height:5px;background:#f59e0b;border-radius:50%"></span>
         </div>
+        <div class="nav-tab" id="tab-connect" onclick="switchTab('connect')">Connect</div>
       </div>
 
       <!-- OVERVIEW -->
       <div id="tab-content-overview">
+        <!-- ESTP Power Card -->
+        <div class="estp-card mb-5">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div>
+              <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#b07d20;margin-bottom:4px">Your ESTP Edge</div>
+              <div style="font-size:16px;font-weight:700;color:#e2e2e2">The Entrepreneur · Real Estate Mode</div>
+            </div>
+            <span class="badge-a">ESTP</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+            <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.12);border-radius:8px;padding:12px">
+              <div style="font-size:18px;margin-bottom:6px">⚡</div>
+              <div style="font-size:11px;font-weight:600;color:#f59e0b;margin-bottom:4px">Superpower</div>
+              <div style="font-size:11px;color:#555;line-height:1.55">Reading clients in real time. You see what others miss — before they say a word.</div>
+            </div>
+            <div style="background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.12);border-radius:8px;padding:12px">
+              <div style="font-size:18px;margin-bottom:6px">⚠️</div>
+              <div style="font-size:11px;font-weight:600;color:#f87171;margin-bottom:4px">Watch Out</div>
+              <div style="font-size:11px;color:#555;line-height:1.55">Admin piles up when you're in motion. LISA handles the paperwork — you close the deal.</div>
+            </div>
+            <div style="background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.12);border-radius:8px;padding:12px">
+              <div style="font-size:18px;margin-bottom:6px">🎯</div>
+              <div style="font-size:11px;font-weight:600;color:#34d399;margin-bottom:4px">In Your Zone</div>
+              <div style="font-size:11px;color:#555;line-height:1.55">Showings, negotiations, and closes. High-stakes, fast-moving, people-driven.</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(245,158,11,.1)">
+            <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#444;margin-bottom:8px">LISA writes so you can do this instead</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              ${['Follow-up emails','Listing descriptions','Price reduction scripts','Offer cover letters','Client check-ins','Objection responses'].map(t=>`<span style="background:#111;border:1px solid #1c1c1c;border-radius:5px;padding:3px 10px;font-size:11px;color:#444">${t}</span>`).join('')}
+            </div>
+          </div>
+        </div>
         <div class="grid grid-cols-3 gap-3 mb-5" id="m-stat-row"></div>
         <div class="card p-5 mb-4" id="m-current-profile"></div>
         <div class="card p-5 mb-4" id="m-schedule"></div>
         <div class="flex gap-3">
           <button class="btn-p flex-1" onclick="startCheckin()">Run Check-In</button>
           <button class="btn-s" onclick="go('s0')">Rebuild Full Profile</button>
+        </div>
+      </div>
+
+      <!-- TOOLS (Phase 2) -->
+      <div id="tab-content-tools" style="display:none">
+        <div style="margin-bottom:20px">
+          <div style="font-size:18px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px">Real Estate Toolkit</div>
+          <p style="font-size:13px;color:#444;line-height:1.65">Built for how you actually work. Fill in the details and LISA gives you a draft — in your voice, ready to send or tweak.</p>
+        </div>
+
+        <!-- TOOL 1: Listing Description -->
+        <div class="tool-card">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="font-size:20px">🏠</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#ccc">Listing Description</div>
+              <div style="font-size:11px;color:#383838">Turn property details into a polished MLS description</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div><div class="lbl mb-1">Address / Area</div><input type="text" id="lst-addr" placeholder="e.g. 4BR in Katy, TX"/></div>
+            <div><div class="lbl mb-1">Price</div><input type="text" id="lst-price" placeholder="e.g. $485,000"/></div>
+            <div><div class="lbl mb-1">Beds / Baths / SqFt</div><input type="text" id="lst-specs" placeholder="e.g. 4/2.5 / 2,800 sqft"/></div>
+            <div><div class="lbl mb-1">Style / Year Built</div><input type="text" id="lst-style" placeholder="e.g. Traditional, 2002"/></div>
+          </div>
+          <div class="lbl mb-1">Top 3–5 features</div>
+          <textarea id="lst-features" rows="2" placeholder="e.g. Updated kitchen, large backyard, cul-de-sac, new roof 2022, primary down" style="margin-bottom:10px"></textarea>
+          <div class="lbl mb-1">Neighborhood highlights</div>
+          <textarea id="lst-hood" rows="2" placeholder="e.g. Top-rated schools, 5 min to 99, walkable to Balmoral amenities" style="margin-bottom:12px"></textarea>
+          <button class="btn-p" onclick="generateListing()" style="width:100%">Generate Listing Description</button>
+          <div class="tool-output" id="lst-output"></div>
+          <div id="lst-copy-btn" style="display:none;margin-top:8px"><button class="btn-s" style="width:100%;font-size:12px" onclick="copyTool('lst-output','lst-copy-btn')">Copy to Clipboard</button></div>
+        </div>
+
+        <!-- TOOL 2: Follow-Up Email -->
+        <div class="tool-card">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="font-size:20px">✉️</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#ccc">Follow-Up Email</div>
+              <div style="font-size:11px;color:#383838">Situation-specific follow-ups in under 10 seconds</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div><div class="lbl mb-1">Client Name</div><input type="text" id="fu-name" placeholder="e.g. The Garcias"/></div>
+            <div><div class="lbl mb-1">Situation</div>
+              <select id="fu-situation">
+                <option value="">— choose situation —</option>
+                <option value="after-showing">After a showing</option>
+                <option value="no-response">No response (2–3 days)</option>
+                <option value="after-offer">After submitting an offer</option>
+                <option value="price-reduction">Price reduction needed</option>
+                <option value="offer-rejected">Offer was rejected</option>
+                <option value="just-listed">Just listed — notify buyers</option>
+                <option value="contract-update">Contract milestone update</option>
+                <option value="30-day-checkin">30-day past-close check-in</option>
+              </select>
+            </div>
+          </div>
+          <div class="lbl mb-1">Any specific details to include (optional)</div>
+          <textarea id="fu-details" rows="2" placeholder="e.g. They loved the kitchen but were concerned about the school district..." style="margin-bottom:12px"></textarea>
+          <button class="btn-p" onclick="buildFollowUp()" style="width:100%">Write Follow-Up Email</button>
+          <div class="tool-output" id="fu-output"></div>
+          <div id="fu-copy-btn" style="display:none;margin-top:8px"><button class="btn-s" style="width:100%;font-size:12px" onclick="copyTool('fu-output','fu-copy-btn')">Copy to Clipboard</button></div>
+        </div>
+
+        <!-- TOOL 3: Objection Handler -->
+        <div class="tool-card">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="font-size:20px">🥊</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#ccc">Objection Handler</div>
+              <div style="font-size:11px;color:#383838">Quick scripts for the objections you hear every week</div>
+            </div>
+          </div>
+          <div class="lbl mb-2">Select the objection</div>
+          <select id="obj-type" onchange="getObjectionScript()" style="margin-bottom:12px">
+            <option value="">— choose an objection —</option>
+            <option value="commission">Your commission is too high</option>
+            <option value="wait">We want to wait until prices drop</option>
+            <option value="zillow">Zillow says it's worth more</option>
+            <option value="lower-offer">We want to offer lower than list</option>
+            <option value="interview">We're interviewing other agents</option>
+            <option value="friend">My friend/family member is an agent</option>
+            <option value="no-rush">We're not in a rush to sell</option>
+            <option value="too-high">Our home won't sell at that price</option>
+          </select>
+          <div class="tool-output" id="obj-output"></div>
+          <div id="obj-copy-btn" style="display:none;margin-top:8px"><button class="btn-s" style="width:100%;font-size:12px" onclick="copyTool('obj-output','obj-copy-btn')">Copy to Clipboard</button></div>
+        </div>
+
+        <!-- TOOL 4: Price Reduction Conversation -->
+        <div class="tool-card">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="font-size:20px">📉</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#ccc">Price Reduction Talk</div>
+              <div style="font-size:11px;color:#383838">Frame the price reduction conversation with a seller</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+            <div><div class="lbl mb-1">Seller Name</div><input type="text" id="pr-name" placeholder="e.g. The Johnsons"/></div>
+            <div><div class="lbl mb-1">Current Price</div><input type="text" id="pr-current" placeholder="e.g. $550,000"/></div>
+            <div><div class="lbl mb-1">Suggested Price</div><input type="text" id="pr-suggest" placeholder="e.g. $525,000"/></div>
+          </div>
+          <div class="lbl mb-1">Days on market / showings / feedback</div>
+          <textarea id="pr-context" rows="2" placeholder="e.g. 42 days, 9 showings, consistent feedback that kitchen feels dated vs comps" style="margin-bottom:12px"></textarea>
+          <button class="btn-p" onclick="buildPriceReduction()" style="width:100%">Write Price Reduction Script</button>
+          <div class="tool-output" id="pr-output"></div>
+          <div id="pr-copy-btn" style="display:none;margin-top:8px"><button class="btn-s" style="width:100%;font-size:12px" onclick="copyTool('pr-output','pr-copy-btn')">Copy to Clipboard</button></div>
+        </div>
+      </div>
+
+      <!-- CONNECT (Phase 3) -->
+      <div id="tab-content-connect" style="display:none">
+        <div style="margin-bottom:20px">
+          <div style="font-size:18px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px">Connect Your World</div>
+          <p style="font-size:13px;color:#444;line-height:1.65">Phase 3 — LISA connects to your real estate platforms to read your data, sync your activity, and surface insights automatically. These integrations are being built.</p>
+        </div>
+        <div class="connect-card" style="opacity:.7">
+          <div class="connect-icon" style="background:#101010">🏢</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:3px">CRM — Follow Up Boss / Salesforce</div>
+            <div style="font-size:11px;color:#444;line-height:1.55">LISA reads your pipeline and drafts follow-ups for every stale contact automatically.</div>
+          </div>
+          <span class="badge-y">Coming Soon</span>
+        </div>
+        <div class="connect-card" style="opacity:.7">
+          <div class="connect-icon" style="background:#101010">🏘</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:3px">MLS — Flexmls / Paragon / Matrix</div>
+            <div style="font-size:11px;color:#444;line-height:1.55">LISA monitors new listings in your farm area and alerts you to pricing opportunities.</div>
+          </div>
+          <span class="badge-y">Coming Soon</span>
+        </div>
+        <div class="connect-card" style="opacity:.7">
+          <div class="connect-icon" style="background:#101010">📅</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:3px">Calendar — Google / Outlook</div>
+            <div style="font-size:11px;color:#444;line-height:1.55">LISA sees your schedule and prepares a briefing before every showing or listing appointment.</div>
+          </div>
+          <span class="badge-y">Coming Soon</span>
+        </div>
+        <div class="connect-card" style="opacity:.7">
+          <div class="connect-icon" style="background:#101010">🌐</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:3px">Zillow / Realtor.com / HAR</div>
+            <div style="font-size:11px;color:#444;line-height:1.55">LISA compares your listing stats to the competition and flags when you need to adjust.</div>
+          </div>
+          <span class="badge-y">Coming Soon</span>
+        </div>
+        <div class="connect-card" style="opacity:.7">
+          <div class="connect-icon" style="background:#101010">📧</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:#ccc;margin-bottom:3px">Email — Gmail / Outlook</div>
+            <div style="font-size:11px;color:#444;line-height:1.55">LISA drafts replies to client emails in your voice. You review and hit send.</div>
+          </div>
+          <span class="badge-y">Coming Soon</span>
+        </div>
+        <div style="margin-top:20px;background:#0a0a0a;border:1px solid #181818;border-radius:10px;padding:18px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#333;margin-bottom:10px">Want something connected first?</div>
+          <p style="font-size:13px;color:#444;line-height:1.65;margin-bottom:12px">Tell your son which tool would save you the most time. He'll build it first.</p>
+          <button class="btn-s" style="width:100%" onclick="switchTab('ideas')">Send a Note →</button>
         </div>
       </div>
 
@@ -453,7 +657,7 @@ Examples:
 
 Nothing is too small. This is your app." style="font-size:14px;line-height:1.75"></textarea>
           <div class="flex items-center gap-3 mt-4">
-            <button class="btn-p flex-1" onclick="sendIdea()" style="background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.25)">
+            <button class="btn-p flex-1" onclick="sendIdea()" style="background:rgba(167,139,250,0.15);color:#f59e0b;border:1px solid rgba(167,139,250,0.25)">
               <svg style="display:inline;margin-right:6px" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               Send to Setup Team
             </button>
@@ -750,7 +954,7 @@ function buildAndShowResults(){
 }
 
 function renderResults(profile,enn,mbti){
-  document.getElementById('r-types').innerHTML=`<div class="type-box"><div class="lbl mb-2">Enneagram</div><div class="type-num">${enn.wing}</div><div style="font-size:13px;font-weight:600;color:#ccc;margin-top:8px">${enn.data.name}</div><div style="font-size:11px;color:#444;margin-top:3px">${enn.data.tag}</div></div><div class="type-box"><div class="lbl mb-2">MBTI</div><div class="type-num" style="color:#a78bfa">${mbti}</div><div style="font-size:13px;font-weight:600;color:#ccc;margin-top:8px">The Entrepreneur</div><div style="font-size:11px;color:#444;margin-top:3px">Bold · Direct · Action-driven</div></div>`;
+  document.getElementById('r-types').innerHTML=`<div class="type-box"><div class="lbl mb-2">Enneagram</div><div class="type-num">${enn.wing}</div><div style="font-size:13px;font-weight:600;color:#ccc;margin-top:8px">${enn.data.name}</div><div style="font-size:11px;color:#444;margin-top:3px">${enn.data.tag}</div></div><div class="type-box"><div class="lbl mb-2">MBTI</div><div class="type-num" style="color:#f59e0b">${mbti}</div><div style="font-size:13px;font-weight:600;color:#ccc;margin-top:8px">The Entrepreneur</div><div style="font-size:11px;color:#444;margin-top:3px">Bold · Direct · Action-driven</div></div>`;
   if(profile.sun_sign){document.getElementById('r-zodiac').innerHTML=[['☀️','Sun',profile.sun_sign],['🌙','Moon',profile.moon_sign||'—'],['⬆️','Rising',profile.rising_sign||'Pending']].map(([e,l,v])=>`<div class="z-pill"><span style="font-size:11px;color:#383838">${e} ${l}</span><strong>${SIGN_EMOJI[v]||''} ${v}</strong></div>`).join('');}
   document.getElementById('r-sources').innerHTML=profile.sources.map(s=>`<div class="src-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>${s}</div>`).join('');
   document.getElementById('r-summary').innerHTML=`<p style="margin-bottom:10px">${ESTP_DATA.summary}</p><p style="color:#555">${enn.data.summary}</p>`;
@@ -798,12 +1002,12 @@ function submitCheckin(){
 
 // ── MONITOR ────────────────────────────────
 function renderMonitor(){document.getElementById('intro-monitor-btn').style.display=history.length?'block':'none';document.getElementById('w-monitor-btn').style.display=history.length?'block':'none';renderOverview();renderHistoryTab();renderDriftTab();}
-function switchTab(t){['overview','history','drift','ideas'].forEach(n=>{document.getElementById(`tab-${n}`).classList.toggle('active',n===t);document.getElementById(`tab-content-${n}`).style.display=n===t?'block':'none';});if(t==='ideas'){renderIdeasLog();document.getElementById('ideas-dot').style.display='none';}}
+function switchTab(t){['overview','tools','history','drift','ideas','connect'].forEach(n=>{document.getElementById(`tab-${n}`).classList.toggle('active',n===t);document.getElementById(`tab-content-${n}`).style.display=n===t?'block':'none';});if(t==='ideas'){renderIdeasLog();document.getElementById('ideas-dot').style.display='none';}}
 function renderOverview(){const latest=history[history.length-1];const p=latest?.profile;const daysSince=lastCheckin?Math.floor((Date.now()-new Date(lastCheckin))/86400000):null;const dueIn=daysSince!==null?checkinInterval-daysSince:null;const overdue=dueIn!==null&&dueIn<=0;document.getElementById('m-stat-row').innerHTML=`<div class="card p-4"><div class="lbl mb-2">Profile Version</div><div style="font-size:26px;font-weight:700;letter-spacing:-.03em;color:#e2e2e2">${history.length}</div><div style="font-size:11px;color:#383838;margin-top:4px">snapshots saved</div></div><div class="card p-4"><div class="lbl mb-2">Last Updated</div><div style="font-size:26px;font-weight:700;letter-spacing:-.03em;color:${overdue?'#f87171':'#e2e2e2'}">${daysSince!==null?daysSince+'d':'—'}</div><div style="font-size:11px;color:#383838;margin-top:4px">${overdue?'⚠️ overdue':'days ago'}</div></div><div class="card p-4"><div class="lbl mb-2">Next Check-In</div><div style="font-size:26px;font-weight:700;letter-spacing:-.03em;color:${overdue?'#f87171':'#34d399'}">${dueIn!==null?(overdue?'Now':`${dueIn}d`):'—'}</div><div style="font-size:11px;color:#383838;margin-top:4px">${checkinInterval}d interval</div></div>`;
-  document.getElementById('m-current-profile').innerHTML=p?`<div class="lbl mb-3">Current Profile</div><div class="flex flex-wrap gap-3 mb-4"><div><div class="lbl mb-1">Enneagram</div><div style="font-size:18px;font-weight:700;color:#e2e2e2">${p.enneagram?.wing||'—'}</div></div><div style="margin-left:20px"><div class="lbl mb-1">MBTI</div><div style="font-size:18px;font-weight:700;color:#a78bfa">${p.mbti?.type||'ESTP'}</div></div>${p.sun_sign?`<div style="margin-left:20px"><div class="lbl mb-1">Sun</div><div style="font-size:18px;font-weight:700;color:#fbbf24">${p.sun_sign}</div></div>`:''}</div><div style="font-size:12px;color:#333">Last updated ${new Date(p.last_updated||p.generated).toLocaleDateString()}</div>`:`<div style="font-size:14px;color:#333;text-align:center;padding:24px 0">No profile yet</div>`;
+  document.getElementById('m-current-profile').innerHTML=p?`<div class="lbl mb-3">Current Profile</div><div class="flex flex-wrap gap-3 mb-4"><div><div class="lbl mb-1">Enneagram</div><div style="font-size:18px;font-weight:700;color:#e2e2e2">${p.enneagram?.wing||'—'}</div></div><div style="margin-left:20px"><div class="lbl mb-1">MBTI</div><div style="font-size:18px;font-weight:700;color:#f59e0b">${p.mbti?.type||'ESTP'}</div></div>${p.sun_sign?`<div style="margin-left:20px"><div class="lbl mb-1">Sun</div><div style="font-size:18px;font-weight:700;color:#fbbf24">${p.sun_sign}</div></div>`:''}</div><div style="font-size:12px;color:#333">Last updated ${new Date(p.last_updated||p.generated).toLocaleDateString()}</div>`:`<div style="font-size:14px;color:#333;text-align:center;padding:24px 0">No profile yet</div>`;
   document.getElementById('m-schedule').innerHTML=`<div class="lbl mb-3">Check-In Schedule</div><div style="font-size:13px;color:#555;line-height:1.6;margin-bottom:14px">LISA runs a 5-question calibration every <strong style="color:#ccc">${checkinInterval} days</strong> to detect personality drift.</div><div class="flex items-center gap-2">${[14,30,60,90].map(d=>`<button onclick="setInterval_(${d})" class="btn-g" style="padding:7px 12px;font-size:12px;${checkinInterval===d?'border-color:#e2e2e2;color:#e2e2e2;':''}">${d}d</button>`).join('')}</div>`;}
 function setInterval_(d){checkinInterval=d;localStorage.setItem('lisa_checkin_days',d);renderOverview();toast(`Check-in interval set to ${d} days`);}
-function renderHistoryTab(){const list=document.getElementById('m-history-list'),empty=document.getElementById('m-history-empty');if(history.length===0){list.style.display='none';empty.style.display='block';return;}list.style.display='flex';empty.style.display='none';list.innerHTML=[...history].reverse().map(s=>{const p=s.profile,isCI=!!s.checkin_answers;return`<div class="snapshot"><div class="flex items-center justify-between mb-2"><div style="font-size:13px;font-weight:500;color:#ccc">${s.label}</div><div class="flex items-center gap-2"><span class="${isCI?'badge-y':'badge-b'}">${isCI?'Check-in':'Full Profile'}</span><span style="font-size:11px;color:#333">${new Date(s.timestamp).toLocaleDateString()}</span></div></div><div class="flex gap-3 flex-wrap">${p?.enneagram?.wing?`<span style="font-size:12px;color:#777">Enneagram <strong style="color:#ccc">${p.enneagram.wing}</strong></span>`:''} ${p?.mbti?.type?`<span style="font-size:12px;color:#777">MBTI <strong style="color:#a78bfa">${p.mbti.type}</strong></span>`:''}</div>${s.checkin_notes?`<div style="font-size:12px;color:#444;margin-top:8px;font-style:italic">"${s.checkin_notes}"</div>`:''}</div>`;}).join('');}
+function renderHistoryTab(){const list=document.getElementById('m-history-list'),empty=document.getElementById('m-history-empty');if(history.length===0){list.style.display='none';empty.style.display='block';return;}list.style.display='flex';empty.style.display='none';list.innerHTML=[...history].reverse().map(s=>{const p=s.profile,isCI=!!s.checkin_answers;return`<div class="snapshot"><div class="flex items-center justify-between mb-2"><div style="font-size:13px;font-weight:500;color:#ccc">${s.label}</div><div class="flex items-center gap-2"><span class="${isCI?'badge-y':'badge-b'}">${isCI?'Check-in':'Full Profile'}</span><span style="font-size:11px;color:#333">${new Date(s.timestamp).toLocaleDateString()}</span></div></div><div class="flex gap-3 flex-wrap">${p?.enneagram?.wing?`<span style="font-size:12px;color:#777">Enneagram <strong style="color:#ccc">${p.enneagram.wing}</strong></span>`:''} ${p?.mbti?.type?`<span style="font-size:12px;color:#777">MBTI <strong style="color:#f59e0b">${p.mbti.type}</strong></span>`:''}</div>${s.checkin_notes?`<div style="font-size:12px;color:#444;margin-top:8px;font-style:italic">"${s.checkin_notes}"</div>`:''}</div>`;}).join('');}
 function renderDriftTab(){const el=document.getElementById('m-drift-content');if(history.length<2){el.innerHTML=`<div class="card p-6 text-center"><div style="font-size:14px;color:#333">Need at least 2 snapshots to analyze drift</div></div>`;return;}const latest=history[history.length-1].profile,prev=history[history.length-2].profile;const diffs=[];if(latest?.enneagram?.type!==prev?.enneagram?.type)diffs.push({dim:'Enneagram Type',old:prev?.enneagram?.wing,cur:latest?.enneagram?.wing,level:'high'});if(latest?.mbti?.type!==prev?.mbti?.type)diffs.push({dim:'MBTI',old:prev?.mbti?.type,cur:latest?.mbti?.type,level:'medium'});el.innerHTML=`<div class="card p-5"><div class="lbl mb-3">Drift Summary</div><div style="font-size:13px;color:#666;margin-bottom:12px">Comparing <strong style="color:#ccc">v${history.length}</strong> to <strong style="color:#ccc">v${history.length-1}</strong></div>${diffs.length===0?`<div class="flex items-center gap-2"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><div style="font-size:13px;color:#34d399">Profile is stable — no significant drift</div></div>`:diffs.map(d=>`<div style="background:#0d0d0d;border:1px solid #181818;border-radius:8px;padding:12px 14px;margin-bottom:8px"><div class="flex items-center justify-between mb-1"><div style="font-size:13px;font-weight:500;color:#ccc">${d.dim}</div><span class="${d.level==='high'?'badge-y':'badge-b'}">${d.level}</span></div><div style="font-size:12px;color:#555">${d.old||'—'} → <span style="color:#ccc">${d.cur||'—'}</span></div></div>`).join('')}</div>`;}
 
 // ── IDEAS ────────────────────────────────
@@ -811,6 +1015,80 @@ let ideasLog=JSON.parse(localStorage.getItem('lisa_ideas')||'[]');
 function sendIdea(){const text=document.getElementById('idea-input').value.trim();if(!text){toast('Write something first!');return;}const entry={timestamp:new Date().toISOString(),text,sent:true};ideasLog.unshift(entry);localStorage.setItem('lisa_ideas',JSON.stringify(ideasLog));localStorage.removeItem('lisa_idea_draft');const subj=encodeURIComponent(`LISA — Note from Mom · ${new Date().toLocaleDateString()}`);const bdy=encodeURIComponent(`Note from Lisa — ${new Date().toLocaleString()}\n${'═'.repeat(44)}\n\n${text}\n\n${'─'.repeat(44)}\nSent via LISA app · Ideas & Requests tab`);document.getElementById('idea-input').value='';renderIdeasLog();toast('Opening your email app…');setTimeout(()=>{window.location.href=`mailto:${SETUP_EMAIL}?subject=${subj}&body=${bdy}`;},500);}
 function saveIdeaDraft(){const text=document.getElementById('idea-input').value;localStorage.setItem('lisa_idea_draft',text);document.getElementById('ideas-dot').style.display='block';toast('Draft saved.');}
 function renderIdeasLog(){const log=document.getElementById('ideas-log'),empty=document.getElementById('ideas-log-empty');const draft=localStorage.getItem('lisa_idea_draft');if(draft&&!document.getElementById('idea-input').value)document.getElementById('idea-input').value=draft;if(ideasLog.length===0){log.style.display='none';empty.style.display='block';return;}log.style.display='flex';empty.style.display='none';log.innerHTML=ideasLog.map(e=>`<div style="background:#0d0d0d;border:1px solid #181818;border-radius:8px;padding:14px 16px"><div class="flex items-center justify-between mb-2"><span style="font-size:11px;color:#2e2e2e">${new Date(e.timestamp).toLocaleString()}</span><span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#34d399"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Sent</span></div><div style="font-size:13px;color:#666;line-height:1.65;white-space:pre-wrap">${e.text}</div></div>`).join('');}
+
+// ── REAL ESTATE TOOLS (Phase 2) ────────────────────────────────
+function showToolOutput(id, text){
+  const el=document.getElementById(id);
+  const btn=document.getElementById(id.replace('output','copy-btn'));
+  el.textContent=text;el.style.display='block';
+  if(btn)btn.style.display='block';
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function copyTool(outId, btnId){
+  const text=document.getElementById(outId).textContent;
+  navigator.clipboard.writeText(text).then(()=>toast('Copied to clipboard!'));
+}
+
+function generateListing(){
+  const addr=document.getElementById('lst-addr').value.trim()||'this beautiful home';
+  const price=document.getElementById('lst-price').value.trim()||'competitively priced';
+  const specs=document.getElementById('lst-specs').value.trim();
+  const style=document.getElementById('lst-style').value.trim();
+  const features=document.getElementById('lst-features').value.trim();
+  const hood=document.getElementById('lst-hood').value.trim();
+  if(!features){toast('Add the top features first.');return;}
+  const lines=features.split(/[,\n]+/).map(f=>f.trim()).filter(Boolean);
+  const hoodfmt=hood?`\n\nLocated ${hood}.`:'';
+  const out=`${addr}${specs?' — '+specs:''} | ${price}\n\n${style?style+' charm with a':'A'} lifestyle you'll actually live in.\n\n${lines.slice(0,2).join(', ')} — the details that matter are already done. ${lines.length>2?lines.slice(2).join(', ')+'. ':''} Everything is move-in ready.${hoodfmt}\n\nSchedule a showing today — homes like this don't sit.`;
+  showToolOutput('lst-output',out);
+}
+
+function buildFollowUp(){
+  const name=document.getElementById('fu-name').value.trim()||'there';
+  const sit=document.getElementById('fu-situation').value;
+  const details=document.getElementById('fu-details').value.trim();
+  if(!sit){toast('Choose a situation first.');return;}
+  const detLine=details?`\n\n${details}`:'';
+  const templates={
+    'after-showing':`Hi ${name},\n\nThank you for coming out today — I really enjoyed walking you through the property.\n${detLine}\n\nWhat are your initial thoughts? I'm happy to pull comps, answer questions, or book a second look if anything stuck with you.\n\nTalk soon,\nLisa`,
+    'no-response':`Hi ${name},\n\nJust wanted to make sure I didn't miss you — I know things get busy.${detLine}\n\nStill happy to help whenever the timing is right. Just say the word and I'm here.\n\nLisa`,
+    'after-offer':`Hi ${name},\n\nJust confirming your offer went over — I'll keep you posted the moment I hear anything back from the other side.${detLine}\n\nThis is the waiting part, but you're in good shape. I'll reach out as soon as I have news.\n\nLisa`,
+    'price-reduction':`Hi ${name},\n\nI want to be straight with you because that's how I work: the market is giving us feedback, and I think it's time we listen.${detLine}\n\nLet's talk this week. I have a specific number in mind that I think repositions us to sell — not just sit. Can we do a quick call?\n\nLisa`,
+    'offer-rejected':`Hi ${name},\n\nI know this isn't the news you wanted, and I won't sugarcoat it. Their answer was no.${detLine}\n\nHere's what I want you to know: this is normal. The right home is still out there and we're not done. Let's regroup and talk next steps — I already have a few properties I want to show you.\n\nLisa`,
+    'just-listed':`Hi ${name},\n\nJust listed something I think you'll want to see before anyone else does.${detLine}\n\nI wanted to get this in front of you first. Want to take a look this week?\n\nLisa`,
+    'contract-update':`Hi ${name},\n\nQuick update on where we stand:${detLine}\n\nEverything is moving. I'll reach out the moment there's anything that needs your attention — otherwise we're on track.\n\nLisa`,
+    '30-day-checkin':`Hi ${name},\n\nCan't believe it's already been a month in the new place! Hoping the move went smoothly and you're getting settled in.${detLine}\n\nIf there's anything you need — recommendations, questions about the area, anything at all — I'm just a text away. And if you know anyone thinking about buying or selling, I'd love the introduction.\n\nLisa`
+  };
+  showToolOutput('fu-output',templates[sit]||'Select a situation to generate the email.');
+}
+
+const OBJECTION_SCRIPTS={
+  'commission':`"I understand — my commission reflects what I actually deliver. Agents who discount usually make it up somewhere else: fewer showings, less marketing spend, slower negotiation. My job is to net you more money at the table than you'd save on commission. Let me show you the numbers from my last 12 transactions."`,
+  'wait':`"I hear that a lot, and here's the honest truth: nobody times the market perfectly — not even economists. What I can tell you is that your costs of waiting are real: carrying costs, opportunity costs, and the fact that rates can move in either direction. The best time to buy is when you're ready and you've found the right home. Let's focus on what we can control."`,
+  'zillow':`"Zillow's algorithm doesn't walk through the house. It doesn't know the updated kitchen, the new roof, or that this street has zero traffic. Zestimates are built on public data from homes that haven't been seen — I base my pricing on what similar homes actually closed for in the last 90 days, in this neighborhood. That's a fundamentally different number."`,
+  'lower-offer':`"I can write that offer — it's your call. But I want you to go in with eyes open: if this home is priced well, a low offer can cost you the deal and put you back at square one. What I'd rather do is look at the comps together right now so we can agree on a number that's strong enough to win without leaving money on the table."`,
+  'interview':`"You should interview other agents — that's a smart move. Here's what I'd ask each of them: How many homes did you sell in this area last year? What's your average days on market? What does your marketing plan look like specifically for my home? I'm happy to answer all of those right now, and I'll put it in writing."`,
+  'friend':`"That's a real consideration, and I respect it. The question worth asking yourself is: are you doing them a favor, or are they doing you one? Real estate transactions get complicated, and the best outcomes come when everyone can be completely honest — including about price, strategy, and hard advice. A friend relationship can make that harder. That said, it's your decision and I'll support whatever you choose."`,
+  'no-rush':`"That's actually an advantage — sellers who aren't desperate make better decisions. But 'not in a rush' doesn't mean 'indifferent to money.' Let's figure out what your home is worth right now, and if the number doesn't work for you, we don't list. No pressure, no obligation. You'll at least know what you're working with."`,
+  'too-high':`"I'd love to tell you that number works, but my job is to protect you from a decision that costs you time and money. Overpriced homes sit. Sitting homes get stigmatized. Stigmatized homes sell below what they could have if priced right from day one. I've seen it too many times. Let me walk you through what the data actually supports — and then we decide together."`
+};
+
+function getObjectionScript(){
+  const type=document.getElementById('obj-type').value;
+  if(!type)return;
+  showToolOutput('obj-output',OBJECTION_SCRIPTS[type]||'Select an objection.');
+}
+
+function buildPriceReduction(){
+  const name=document.getElementById('pr-name').value.trim()||'the sellers';
+  const cur=document.getElementById('pr-current').value.trim()||'current price';
+  const sug=document.getElementById('pr-suggest').value.trim()||'the adjusted price';
+  const ctx=document.getElementById('pr-context').value.trim();
+  if(!ctx){toast('Add days on market and feedback first.');return;}
+  const out=`Script for the price reduction conversation with ${name}:\n\n"${name}, I want to talk with you because I think we need to make a move — and I'd rather have this conversation now than wait another 30 days.\n\nHere's what the market is telling us: ${ctx}.\n\nAt ${cur}, we're not attracting the buyers who can actually close on this home. At ${sug}, we reposition ourselves in a completely different search range — buyers who are qualified and ready.\n\nI know this isn't easy to hear. But my job isn't to make you feel good about a number that isn't working. My job is to sell your home for as much as possible in the right timeframe. The longer we sit, the more leverage we give up.\n\nI'm recommending we move to ${sug}. Can we do that?"`;
+  showToolOutput('pr-output',out);
+}
 
 // ── TOAST ────────────────────────────────
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
